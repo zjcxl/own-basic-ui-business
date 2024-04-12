@@ -1,5 +1,6 @@
 <script generic="T = RowDataType" lang="ts" setup>
 import { computed } from 'vue'
+import { NButton } from 'naive-ui'
 import type { OperationProps, RowDataType } from '../../common'
 import MoreDropdown from './MoreDropdown.vue'
 
