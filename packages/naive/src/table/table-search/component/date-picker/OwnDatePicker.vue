@@ -4,10 +4,16 @@ import { NDatePicker } from 'naive-ui'
 import { computed, onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
 import type { QueryDataType } from '../../../common'
-import type { BaseComponentStateProps } from '../../types'
 import type { DatePicker } from './types'
 
-const props = withDefaults(defineProps<BaseComponentStateProps<number, DatePicker>>(), {
+const props = withDefaults(defineProps<{
+  defaultValue?: number
+  index: number
+  placeholder?: string
+  field: string
+  disabled?: boolean
+  extra?: DatePicker
+}>(), {
   placeholder: '',
 })
 

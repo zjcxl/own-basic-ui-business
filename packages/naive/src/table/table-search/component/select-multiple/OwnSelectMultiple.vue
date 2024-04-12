@@ -4,12 +4,15 @@ import { computed, onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
 import type { SelectAdvancedOption } from '../select'
 import type { QueryDataType } from '../../../common'
-import type { BaseComponentStateProps } from '../../types'
 
-const props = withDefaults(defineProps<BaseComponentStateProps<
-  Array<string | number | undefined>,
-  SelectAdvancedOption
->>(), {
+const props = withDefaults(defineProps<{
+  defaultValue?: Array<string | number | undefined>
+  index: number
+  placeholder?: string
+  field: string
+  disabled?: boolean
+  extra?: SelectAdvancedOption
+}>(), {
   placeholder: '',
 })
 

@@ -46,9 +46,15 @@ function handleClick(key: number): void {
     trigger="hover"
     @select="handleClick"
   >
-    <a style="cursor: pointer;" @click.prevent>
-      更多
-      <CaretDown />
-    </a>
+    <NButton
+      style="cursor: pointer;display: flex;justify-content: center;align-items: center;"
+      tag="a"
+      text
+      type="primary"
+      @click.prevent
+    >
+      <span>更多</span>
+      <CaretDown style="height: 1em" />
+    </NButton>
   </NDropdown>
 </template>

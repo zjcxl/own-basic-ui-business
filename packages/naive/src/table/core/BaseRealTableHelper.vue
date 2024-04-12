@@ -13,22 +13,14 @@ import type {
 import { getOperationColumn } from '../common'
 import { BaseTableSearchHelper, calcPageSizes } from '../table-search'
 import type { DataTableProps } from './types'
+import { defaultDataTableProps } from './types'
 import TableLineOperation from './component/TableLineOperation.vue'
 
 /**
  * 定义表格组件参数
  */
 const props = withDefaults(defineProps<DataTableProps<T>>(), {
-  dividerName: '数据列表',
-  defaultPage: 1,
-  defaultRows: 10,
-  maxRows: 100,
-  defaultParams: () => ({}),
-  helperType: 'table',
-  search: () => [],
-  searchExtra: () => ({}),
-  operations: () => [],
-  operationExtra: () => ({}),
+  ...defaultDataTableProps<T>(),
 })
 
 /**
@@ -214,6 +206,7 @@ watch(
 
 onMounted(async () => {
   await fetchData()
+  console.log(props)
 })
 
 const dividerName = props.dividerName
@@ -238,11 +231,11 @@ const helperType = props.helperType
     </NDivider>
     <div v-if="helperType === 'table'" style="overflow: auto">
       <NDataTable
+        v-bind="props as DataTableProps"
         :columns="resultColumns"
-        :data="dataList as RowDataType[]"
+        :data="dataList"
         :pagination="false"
         :render-cell="renderOperationCell as any"
-        v-bind="props as DataTableProps"
       />
     </div>
     <div v-else>

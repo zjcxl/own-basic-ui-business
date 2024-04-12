@@ -3,9 +3,14 @@ import { NInput } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
 import type { QueryDataType } from '../../../common'
-import type { BaseComponentStateProps } from '../../types'
 
-const props = withDefaults(defineProps<BaseComponentStateProps<string>>(), {
+const props = withDefaults(defineProps<{
+  defaultValue?: string
+  index: number
+  placeholder?: string
+  field: string
+  disabled?: boolean
+}>(), {
   placeholder: '',
 })
 

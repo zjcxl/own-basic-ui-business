@@ -3,10 +3,16 @@ import { NInputNumber } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
 import type { QueryDataType } from '../../../common'
-import type { BaseComponentStateProps } from '../../types'
 import type { NumberAdvancedExtra } from './types'
 
-const props = withDefaults(defineProps<BaseComponentStateProps<number | undefined, NumberAdvancedExtra>>(), {
+const props = withDefaults(defineProps<{
+  defaultValue?: number
+  index: number
+  placeholder?: string
+  field: string
+  disabled?: boolean
+  extra?: NumberAdvancedExtra
+}>(), {
   placeholder: '',
 })
 

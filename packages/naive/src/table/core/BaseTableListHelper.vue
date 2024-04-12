@@ -3,12 +3,15 @@ import { ref } from 'vue'
 import type { TableInstanceType, TableSlotsType } from '../common'
 import BaseRealTableHelper from './BaseRealTableHelper.vue'
 import type { DataTableProps } from './types'
+import { defaultDataTableProps } from './types'
 import { useCustomTableHelper } from './utils'
 
 /**
  * 定义表格组件参数
  */
-const props = defineProps<DataTableProps<T>>()
+const props = withDefaults(defineProps<DataTableProps<T>>(), {
+  ...defaultDataTableProps<T>(),
+})
 
 /**
  * 定义插槽信息
@@ -34,8 +37,8 @@ defineExpose({ refresh, getDataList })
 <template>
   <BaseRealTableHelper
     ref="baseRealTableHelper"
-    helper-type="list"
     v-bind="props"
+    helper-type="list"
   >
     <template v-if="slots.search" #search>
       <slot name="search" />

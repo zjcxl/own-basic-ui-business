@@ -55,10 +55,9 @@ const operationMore = computed<OperationProps<T>[]>(() =>
     <NButton
       v-for="item in buttonOperationArray"
       :key="item.title"
-      :danger="item.danger"
+      :type="item.type || 'primary'"
       tag="a"
       text
-      type="primary"
       @click="item.action(props.record)"
     >
       {{ item.titleRender?.(props.record) || item.title }}

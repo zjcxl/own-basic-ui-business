@@ -27,6 +27,12 @@ import type {
 } from '../common'
 import type { DefaultSearchPropsValueType, SearchExtra } from '../table-search'
 
+type NativeType = null | number | string | boolean | symbol | Function
+type InferDefault<P, T> = ((props: P) => T & {}) | (T extends NativeType ? T : never)
+type InferDefaults<T> = {
+  [K in keyof T]?: InferDefault<T, T[K]>;
+}
+
 export interface DataTableProps<T = RowDataType> {
   /**
    * 分隔栏名称
@@ -327,4 +333,70 @@ export interface DataTableProps<T = RowDataType> {
    * @default undefined
    */
   'onScroll'?: (e: Event) => void
+}
+
+/**
+ * 默认的 DataTableProps
+ */
+export function defaultDataTableProps<T>(): InferDefaults<DataTableProps<T>> {
+  return {
+    dividerName: '数据列表',
+    defaultPage: 1,
+    defaultRows: 10,
+    maxRows: 100,
+    defaultParams: () => ({}),
+    beforeFetch: undefined,
+    fetchMethod: undefined,
+    helperType: 'table',
+    search: () => ([]),
+    searchExtra: () => ({}),
+    operations: () => ([]),
+    operationExtra: () => ({}),
+    pagination: false,
+    paginateSinglePage: true,
+    minHeight: undefined,
+    maxHeight: undefined,
+    columns: () => ([]),
+    rowClassName: undefined,
+    rowProps: undefined,
+    rowKey: undefined,
+    summary: undefined,
+    data: () => ([]),
+    loading: false,
+    bordered: true,
+    bottomBordered: true,
+    striped: false,
+    scrollX: undefined,
+    defaultCheckedRowKeys: undefined,
+    checkedRowKeys: undefined,
+    singleLine: true,
+    singleColumn: false,
+    size: 'medium',
+    remote: false,
+    defaultExpandedRowKeys: () => ([]),
+    defaultExpandAll: false,
+    expandedRowKeys: undefined,
+    stickyExpandedRows: false,
+    virtualScroll: false,
+    tableLayout: 'auto',
+    allowCheckingNotLoaded: false,
+    cascade: true,
+    childrenKey: 'children',
+    indent: 16,
+    flexHeight: false,
+    summaryPlacement: 'bottom',
+    paginationBehaviorOnFilter: 'current',
+    scrollbarProps: undefined,
+    renderCell: undefined,
+    renderExpandIcon: undefined,
+    spinProps: undefined,
+    onLoad: undefined,
+    onUpdatePage: undefined,
+    onUpdatePageSize: undefined,
+    onUpdateSorter: undefined,
+    onUpdateFilters: undefined,
+    onUpdateCheckedRowKeys: undefined,
+    onUpdateExpandedRowKeys: undefined,
+    onScroll: undefined,
+  }
 }

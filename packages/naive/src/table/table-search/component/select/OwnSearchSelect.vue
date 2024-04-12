@@ -3,10 +3,16 @@ import { NSelect } from 'naive-ui'
 import { computed, onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
 import type { QueryDataType } from '../../../common'
-import type { BaseComponentStateProps } from '../../types'
 import type { SelectAdvancedOption } from './types'
 
-const props = withDefaults(defineProps<BaseComponentStateProps<string | number | undefined, SelectAdvancedOption>>(), {
+const props = withDefaults(defineProps<{
+  defaultValue?: string | number
+  index: number
+  placeholder?: string
+  field: string
+  disabled?: boolean
+  extra?: SelectAdvancedOption
+}>(), {
   placeholder: '',
 })
 

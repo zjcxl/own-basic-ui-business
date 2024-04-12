@@ -13,9 +13,9 @@ export interface OperationProps<T> {
    */
   hidden?: boolean
   /**
-   * 是否危险按钮
+   * 按钮类型
    */
-  danger?: boolean
+  type?: 'default' | 'tertiary' | 'primary' | 'success' | 'info' | 'warning' | 'error'
   /**
    * 上方分隔线
    */
