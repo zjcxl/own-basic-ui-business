@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <link href="/src/assets/logo-img.png" rel="icon" type="image/png">
+  <title>playground</title>
+  <meta content="Opinionated Vite Starter Template" name="description">
+</head>
+<body class="font-sans dark:text-white dark:bg-hex-121212">
+<div id="app"></div>
+<noscript>
+  <div>Please enable JavaScript to use this application.</div>
+</noscript>
+<script>
+  (function () {
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+    const setting = localStorage.getItem('color-schema') || 'auto'
+    if (setting === 'dark' || (prefersDark && setting !== 'light'))
+      document.documentElement.classList.toggle('dark', true)
+  })()
+</script>
+<script src="/src/main.ts" type="module"></script>
+</body>
+</html>

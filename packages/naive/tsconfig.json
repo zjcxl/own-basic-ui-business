@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "vite/client",
+      "naive-ui/volar",
+      "unplugin-vue-macros/macros-global"
+    ]
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}
