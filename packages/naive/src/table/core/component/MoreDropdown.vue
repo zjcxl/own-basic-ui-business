@@ -23,7 +23,7 @@ const options = props.list.map((item, index) => ({
   key: index,
   title: item.titleRender?.(props.record) || item.title,
   disabled: !(!item.check || item.check(props.record)),
-  danger: item.danger,
+  type: item.type,
 }))
 
 /**
