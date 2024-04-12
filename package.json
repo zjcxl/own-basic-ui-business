@@ -10,7 +10,7 @@
     "bumpp": "bumpp patch -r --commit --push --tag -y",
     "publish:release": "pnpm -r publish --no-git-checks --access public",
     "publish:pre": "nr build",
-    "up": "taze major -r -f -w"
+    "up": "taze major -rfwi"
   },
   "publishConfig": {
     "access": "public",
@@ -21,7 +21,7 @@
     "@antfu/ni": "^0.21.12",
     "@antfu/utils": "^0.7.7",
     "bumpp": "^9.4.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "esno": "^4.7.0",
     "pnpm": "^8.15.6",
     "rimraf": "^5.0.5",
@@ -29,7 +29,7 @@
     "typescript": "^5.4.5",
     "unbuild": "^2.0.0",
     "vite": "^5.2.8",
-    "vitest": "^1.4.0"
+    "vitest": "^1.5.0"
   },
   "workspaces": [
     "packages/*"
