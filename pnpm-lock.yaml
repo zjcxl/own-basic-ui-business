@@ -54,14 +54,14 @@ importers:
         specifier: ^2.13.3
         version: 2.13.3(@vue/compiler-sfc@3.4.21)(eslint@9.0.0)(typescript@5.4.5)(vitest@1.5.0)
       '@own-basic-component/buried':
-        specifier: ^0.8.30
-        version: 0.8.30
+        specifier: ^0.8.32
+        version: 0.8.32
       '@own-basic-component/config':
-        specifier: ^0.8.30
-        version: 0.8.30
+        specifier: ^0.8.32
+        version: 0.8.32
       '@own-basic-component/util':
-        specifier: ^0.8.30
-        version: 0.8.30
+        specifier: ^0.8.32
+        version: 0.8.32
       '@types/node':
         specifier: ^20.12.7
         version: 20.12.7
@@ -129,20 +129,20 @@ importers:
   playground:
     dependencies:
       '@own-basic-component/config':
-        specifier: ^0.8.30
-        version: 0.8.30
+        specifier: ^0.8.32
+        version: 0.8.32
       '@own-basic-component/request':
-        specifier: ^0.8.30
-        version: 0.8.30
+        specifier: ^0.8.32
+        version: 0.8.32
       '@own-basic-component/request-axios':
-        specifier: ^0.8.30
-        version: 0.8.30
+        specifier: ^0.8.32
+        version: 0.8.32
       '@own-basic-component/util':
-        specifier: ^0.8.30
-        version: 0.8.30
+        specifier: ^0.8.32
+        version: 0.8.32
       '@own-basic-component/vue':
-        specifier: ^0.8.30
-        version: 0.8.30
+        specifier: ^0.8.32
+        version: 0.8.32
       '@vueuse/core':
         specifier: ^10.9.0
         version: 10.9.0(vue@3.4.21)
@@ -2056,19 +2056,19 @@ packages:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==, tarball: https://registry.npmjs.org/@one-ini/wasm/-/wasm-0.1.1.tgz}
     dev: true
 
-  /@own-basic-component/buried@0.8.30:
-    resolution: {integrity: sha512-IAh2FdaIwaHtHspj0ERenlbTndwaHQpQ3Cb8VAh8bk4zLUE3MRY9j51H/kiBiTWfys/79vkHGqcn16twZTfOQQ==, tarball: https://registry.npmjs.org/@own-basic-component/buried/-/buried-0.8.30.tgz}
+  /@own-basic-component/buried@0.8.32:
+    resolution: {integrity: sha512-yy7mMgzKi5SNNMZi9BdRYqsMAyNVtRt5hwb5Mom2NruuxAYQ1q/4K4/HYUHjUfyEGC2zjLhXspOqsY8B4x4cPQ==, tarball: https://registry.npmjs.org/@own-basic-component/buried/-/buried-0.8.32.tgz}
     engines: {node: '>=16'}
     dependencies:
       '@types/platform': 1.3.6
       platform: 1.3.6
     dev: true
 
-  /@own-basic-component/config@0.8.30:
-    resolution: {integrity: sha512-Y1+wIuxltwYr7RaFvW+jS/s8btL0t3hxeX260WwlvPKnfVoiqUOukhCwTfGyc9s9OooICOb1SOiBKR6QpRYNDw==, tarball: https://registry.npmjs.org/@own-basic-component/config/-/config-0.8.30.tgz}
+  /@own-basic-component/config@0.8.32:
+    resolution: {integrity: sha512-cmtGAujh2pEo8z4/10UKFM4sUJ0r515ELKZHjD3hYdFiLbKYR+uzCBSr9rGUeplPFZFltlOseCme8TFRtP89XQ==, tarball: https://registry.npmjs.org/@own-basic-component/config/-/config-0.8.32.tgz}
 
-  /@own-basic-component/request-axios@0.8.30:
-    resolution: {integrity: sha512-mjIASY983H9PVC8M59hyi3TOwv+bzDsgH3inPo3FBbdoSXO4iaKzWMPJOIDDiAHfaERUF+MY75orT0JjQrHLgQ==, tarball: https://registry.npmjs.org/@own-basic-component/request-axios/-/request-axios-0.8.30.tgz}
+  /@own-basic-component/request-axios@0.8.32:
+    resolution: {integrity: sha512-4CZD6cQrV+nnVDXEmxN+9aDAQIbX96sSKqfgYEQJdznogwUqmIwf9TQNRz/i45t4cHbNMOfIPgVOSD7BdNtH6Q==, tarball: https://registry.npmjs.org/@own-basic-component/request-axios/-/request-axios-0.8.32.tgz}
     engines: {node: '>=16'}
     dependencies:
       axios: 1.6.8
@@ -2076,20 +2076,20 @@ packages:
       - debug
     dev: false
 
-  /@own-basic-component/request@0.8.30:
-    resolution: {integrity: sha512-pvyNqJC5vRJMSsCif+/ROuV/4+HWF4ku5fx4Kpz44NeN0LXbCrSTjZh17McWxoTSMzFKVwNsfNDDzD9pAQri/A==, tarball: https://registry.npmjs.org/@own-basic-component/request/-/request-0.8.30.tgz}
+  /@own-basic-component/request@0.8.32:
+    resolution: {integrity: sha512-7oafBE71PQLkk/Xsb6MCVVkVH5pVPcLMOzUelcBMoAB64klAgO/XBMvXrrREcm8YHVysHXNhZvrspx6xE7e0vw==, tarball: https://registry.npmjs.org/@own-basic-component/request/-/request-0.8.32.tgz}
     engines: {node: '>=16'}
     dev: false
 
-  /@own-basic-component/util@0.8.30:
-    resolution: {integrity: sha512-0cI1jTYWoUk6vPQzz8ORdPnRr8PBJVtIMJDikE70Tqs4MwKkHhmPInBdzyT4FiieCEUmeWA5DKwupJ/Hzbd33A==, tarball: https://registry.npmjs.org/@own-basic-component/util/-/util-0.8.30.tgz}
+  /@own-basic-component/util@0.8.32:
+    resolution: {integrity: sha512-8u0N3OcG4m9NT7otaasCpObY6+m7ea/pBPvpnXZZyiY4x14tesv9Cu9lK1X1HhdcgzgJOH0Xyi0y4qMuxpRsEQ==, tarball: https://registry.npmjs.org/@own-basic-component/util/-/util-0.8.32.tgz}
     engines: {node: '>=16'}
     dependencies:
       clipboard: 2.0.11
       nanoid: 5.0.7
 
-  /@own-basic-component/vue@0.8.30:
-    resolution: {integrity: sha512-HHl060gdoX6KRfTwTz7xy6G/8L9yp5VPMjxBu6g9w9WujwP8j07K1dLEqWGoP6o9+fmx2Lc847FzR26gq8aDTQ==, tarball: https://registry.npmjs.org/@own-basic-component/vue/-/vue-0.8.30.tgz}
+  /@own-basic-component/vue@0.8.32:
+    resolution: {integrity: sha512-njRqUeZ40F7qYbhohOp9ovKRUz09815Wj97Dm+TlVw9j2/fiLXr+757yFnNc5DVNWqQwCCxp1FiEuEZpNvJgJg==, tarball: https://registry.npmjs.org/@own-basic-component/vue/-/vue-0.8.32.tgz}
     dev: false
 
   /@pkgjs/parseargs@0.11.0:
@@ -5899,7 +5899,7 @@ packages:
       delegate: 3.2.0
 
   /graceful-fs@4.2.11:
-    resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
+    resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==, tarball: https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.11.tgz}
     dev: true
 
   /graphemer@1.4.0:
