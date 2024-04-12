@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { NInput } from 'naive-ui'
-import { defineExpose, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
 import type { QueryDataType } from '../../../common'
 import type { BaseComponentStateProps } from '../../types'

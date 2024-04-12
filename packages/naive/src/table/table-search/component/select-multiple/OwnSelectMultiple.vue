@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { NSelect } from 'naive-ui'
-import { computed, defineExpose, onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
 import type { SelectAdvancedOption } from '../select'
 import type { QueryDataType } from '../../../common'

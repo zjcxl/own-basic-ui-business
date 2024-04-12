@@ -1,5 +1,6 @@
 <script generic="T = RowDataType" lang="ts" setup>
 import { NDropdown } from 'naive-ui'
+import { CaretDown } from '@vicons/ionicons5'
 import type { OperationProps, RowDataType } from '../../common'
 
 interface PropsState {
@@ -47,6 +48,7 @@ function handleClick(key: number): void {
   >
     <a style="cursor: pointer;" @click.prevent>
       更多
+      <CaretDown />
     </a>
   </NDropdown>
 </template>
