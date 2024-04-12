@@ -206,7 +206,6 @@ watch(
 
 onMounted(async () => {
   await fetchData()
-  console.log(props)
 })
 
 const dividerName = props.dividerName
