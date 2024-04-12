@@ -1,7 +1,7 @@
 {
   "name": "@own-basic/ui-business-naive",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "packageManager": "pnpm@8.15.6",
   "author": "chenxueli",
   "license": "MIT",
@@ -38,9 +38,9 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.13.3",
-    "@own-basic-component/buried": "^0.8.30",
-    "@own-basic-component/config": "^0.8.30",
-    "@own-basic-component/util": "^0.8.30",
+    "@own-basic-component/buried": "^0.8.31",
+    "@own-basic-component/config": "^0.8.31",
+    "@own-basic-component/util": "^0.8.31",
     "@types/node": "^20.12.7",
     "@vicons/ionicons5": "^0.12.0",
     "@vicons/utils": "^0.1.4",
