@@ -1,5 +1,5 @@
 <script generic="T = RowDataType" lang="ts" setup>
-import type { PageResultModel, QueryObjectType } from '@own-basic-component/config'
+import type { PageResultModel, QueryObjectType, ResultModel } from '@own-basic-component/config'
 import type { DataTableBaseColumn, DataTableColumn } from 'naive-ui'
 import { NDataTable, NDivider, NPagination, NSpace } from 'naive-ui'
 import { sendAe } from '@own-basic-component/buried'
@@ -110,7 +110,7 @@ async function fetchData(params?: QueryObjectType, page: number = pageInfo.page)
       rows: pageInfo.rows,
     }
     // 远程请求数据
-    props.fetchMethod(resultParams).then((response: PageResultModel<T>) => {
+    props.fetchMethod(resultParams).then((response: ResultModel<PageResultModel<T>>) => {
       pageInfo.page = response.data.page
       pageInfo.rows = response.data.rows
       pageInfo.total = response.data.total

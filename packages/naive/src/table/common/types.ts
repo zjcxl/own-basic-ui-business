@@ -1,4 +1,4 @@
-import type { PageResultModel } from '@own-basic-component/config'
+import type { PageResultModel, ResultModel } from '@own-basic-component/config'
 
 /**
  * 列表数据类型
@@ -32,7 +32,7 @@ export interface PageInfo {
 /**
  * 请求方法的类型
  */
-export type FetchMethodType<T = RowDataType> = (params?: QueryDataType) => Promise<PageResultModel<T>>
+export type FetchMethodType<T = RowDataType> = (params?: QueryDataType) => Promise<ResultModel<PageResultModel<T>>>
 
 /**
  * 表格的默认实例对象
