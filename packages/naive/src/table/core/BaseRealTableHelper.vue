@@ -5,6 +5,7 @@ import { NDataTable, NDivider, NPagination, NSpace } from 'naive-ui'
 import { sendAe } from '@own-basic-component/buried'
 import { computed, h, onMounted, reactive, ref, unref, watch } from 'vue'
 import type {
+  OperationProps,
   PageInfo,
   RowDataType,
   TableInstanceType,
@@ -166,16 +167,27 @@ function refresh(pageInit: number | boolean = false) {
 }
 
 /**
- * 计算操作列信息
+ * 过滤掉不显示的操作（权限值过滤）
  */
-function calcOperationColumn() {
+const permissionFilterOperations = computed<OperationProps<T>[]>(() => props.operations.filter((item) => {
+  if (typeof item.permission == 'boolean')
+    return item.permission
+  if (typeof item.permission == 'function')
+    return item.permission()
+  return true
+}))
+
+/**
+ * 计算操作列的宽度信息
+ */
+function calcOperationColumnWidth() {
   if (props.helperType === 'table') {
     // 获取当前操作的column，如果存在对应的key的话就不需要进行操作
     const flag = (props.columns || []).some(column => (column as Required<{ key: string }>).key === TABLE_OPERATION_KEY)
     if (flag)
       return
     // 计算操作列信息
-    customOperationColumn.value = getOperationColumn(props.operations, props.operationExtra, TABLE_OPERATION_KEY)
+    customOperationColumn.value = getOperationColumn(permissionFilterOperations.value, props.operationExtra, TABLE_OPERATION_KEY)
   }
 }
 
@@ -189,7 +201,7 @@ function renderOperationCell(value: any, row: T, column: DataTableBaseColumn) {
   if (column.key === TABLE_OPERATION_KEY) {
     return h(TableLineOperation<T>, {
       record: row,
-      operations: props.operations,
+      operations: permissionFilterOperations.value,
     })
   }
   return value
@@ -200,7 +212,7 @@ function renderOperationCell(value: any, row: T, column: DataTableBaseColumn) {
  */
 watch(
   () => props.operations,
-  () => calcOperationColumn(),
+  () => calcOperationColumnWidth(),
   { immediate: true },
 )
 
