@@ -3,8 +3,8 @@ import { format } from 'date-fns'
 import { NDatePicker } from 'naive-ui'
 import { computed, onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
-import type { DatePicker } from './types'import type { PageResultModel, QueryObjectType, ResultModel } from '@own-basic-component/config'
-
+import type { QueryObjectType } from '@own-basic-component/config'
+import type { DatePicker } from './types'
 
 const props = withDefaults(defineProps<{
   defaultValue?: number

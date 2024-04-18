@@ -40,6 +40,7 @@ export default defineConfig({
         globals: {
           'vue': 'Vue',
           'naive-ui': 'NaiveUi',
+          '@own-basic-component/buried': 'Buried',
         },
       },
     },
