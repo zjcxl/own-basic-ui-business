@@ -1,3 +1,5 @@
+import type { PageResultModel, QueryObjectType, ResultModel } from '@own-basic-component/config'
+
 import type {
   CreateRowClassName,
   CreateRowKey,
@@ -14,23 +16,55 @@ import type {
   TableColumns,
 } from 'naive-ui/es/data-table/src/interface'
 import type { PaginationProps, ScrollbarProps } from 'naive-ui'
-import type { VNodeChild } from 'vue'
+import type { CSSProperties, VNodeChild } from 'vue'
 import type { BaseLoadingExposedProps } from 'naive-ui/es/_internal'
 import type { MaybeArray } from 'naive-ui/es/_utils'
-import type {
-  BeforeFetchMethodType,
-  DefaultParamsType,
-  FetchMethodType,
-  OperationExtra,
-  OperationProps,
-  RowDataType,
-} from '../common'
 import type { DefaultSearchPropsValueType, SearchExtra } from '../table-search'
 
-type NativeType = null | number | string | boolean | symbol | Function
-type InferDefault<P, T> = ((props: P) => T & {}) | (T extends NativeType ? T : never)
-type InferDefaults<T> = {
-  [K in keyof T]?: InferDefault<T, T[K]>;
+/**
+ * 列表数据类型
+ */
+export type RowDataType = Record<string, any>
+
+/**
+ * 默认的请求参数
+ */
+export type DefaultParamsType = QueryObjectType
+
+/**
+ * 请求之前的类型钩子
+ */
+export type BeforeFetchMethodType = () => Promise<QueryObjectType>
+
+/**
+ * 请求方法的类型
+ */
+export type FetchMethodType<T = RowDataType> = (params?: QueryObjectType) => Promise<ResultModel<PageResultModel<T>>>
+
+/**
+ * 表格的默认实例对象
+ */
+export interface TableInstanceType<T = RowDataType> {
+  /**
+   * 刷新的方法
+   * @param pageInit
+   */
+  refresh: (pageInit?: number | boolean) => void
+  /**
+   * 获取数据列表的方法
+   */
+  getDataList: () => T[]
+}
+
+/**
+ * 表格的默认slots对象
+ */
+export interface TableSlotsType<T = RowDataType> {
+  'default'?: () => void
+  'search'?: () => void
+  'operation'?: () => void
+  'data-list'?: (params: { list: T[] }) => void
+  'data-grid'?: (params: { data: T }) => void
 }
 
 export interface DataTableProps<T = RowDataType> {
@@ -73,7 +107,7 @@ export interface DataTableProps<T = RowDataType> {
    * 列表还是表格
    * @default 'table'
    */
-  'helperType'?: 'table' | 'list'
+  'helperType'?: 'table' | 'list' | 'grid'
   /**
    * 搜索栏的配置
    * @default []
@@ -336,67 +370,80 @@ export interface DataTableProps<T = RowDataType> {
 }
 
 /**
- * 默认的 DataTableProps
+ * 表格的操作列对象接口
  */
-export function defaultDataTableProps<T>(): InferDefaults<DataTableProps<T>> {
-  return {
-    dividerName: '数据列表',
-    defaultPage: 1,
-    defaultRows: 10,
-    maxRows: 100,
-    defaultParams: () => ({}),
-    beforeFetch: undefined,
-    fetchMethod: undefined,
-    helperType: 'table',
-    search: () => ([]),
-    searchExtra: () => ({}),
-    operations: () => ([]),
-    operationExtra: () => ({}),
-    pagination: false,
-    paginateSinglePage: true,
-    minHeight: undefined,
-    maxHeight: undefined,
-    columns: () => ([]),
-    rowClassName: undefined,
-    rowProps: undefined,
-    rowKey: undefined,
-    summary: undefined,
-    data: () => ([]),
-    loading: false,
-    bordered: true,
-    bottomBordered: true,
-    striped: false,
-    scrollX: undefined,
-    defaultCheckedRowKeys: undefined,
-    checkedRowKeys: undefined,
-    singleLine: true,
-    singleColumn: false,
-    size: 'medium',
-    remote: false,
-    defaultExpandedRowKeys: () => ([]),
-    defaultExpandAll: false,
-    expandedRowKeys: undefined,
-    stickyExpandedRows: false,
-    virtualScroll: false,
-    tableLayout: 'auto',
-    allowCheckingNotLoaded: false,
-    cascade: true,
-    childrenKey: 'children',
-    indent: 16,
-    flexHeight: false,
-    summaryPlacement: 'bottom',
-    paginationBehaviorOnFilter: 'current',
-    scrollbarProps: undefined,
-    renderCell: undefined,
-    renderExpandIcon: undefined,
-    spinProps: undefined,
-    onLoad: undefined,
-    onUpdatePage: undefined,
-    onUpdatePageSize: undefined,
-    onUpdateSorter: undefined,
-    onUpdateFilters: undefined,
-    onUpdateCheckedRowKeys: undefined,
-    onUpdateExpandedRowKeys: undefined,
-    onScroll: undefined,
-  }
+export interface OperationProps<T> {
+  /**
+   * 操作名称
+   */
+  title: string
+  /**
+   * 是否隐藏，默认不隐藏
+   */
+  hidden?: boolean
+  /**
+   * 按钮类型
+   */
+  type?: 'default' | 'tertiary' | 'primary' | 'success' | 'info' | 'warning' | 'error'
+  /**
+   * 上方分隔线
+   */
+  divider?: boolean
+  /**
+   * 上方分隔线
+   */
+  topDivider?: boolean
+  /**
+   * 下方分隔线
+   */
+  bottomDivider?: boolean
+  /**
+   * 路由地址
+   */
+  router?: string
+  /**
+   * 权限判断（以当前的路由信息进行判断）
+   */
+  permission?: boolean | (() => boolean)
+  /**
+   * 按钮样式
+   */
+  style?: CSSProperties
+
+  /**
+   * 渲染操作名称
+   * @param record
+   */
+  titleRender?: (record: T) => string
+
+  /**
+   * 数据验证判断是否显示该-操作按钮，如果为true显示
+   * @param record
+   */
+  check?: (record: T) => boolean
+
+  /**
+   * 点击后调用的方法
+   * @param record 当前行的记录
+   * @param el 当前行的元素
+   */
+  action: (record: T, el?: HTMLElement | null) => void
+}
+
+/**
+ * 操作列额外参数
+ */
+export interface OperationExtra {
+  /**
+   * 宽度
+   */
+  width?: number
+  /**
+   * 固定位置
+   */
+  fixed?: 'left' | 'right' | ''
+  /**
+   * 最大的个数
+   */
+  max?: number
 }

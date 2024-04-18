@@ -2,11 +2,11 @@
 import { NSelect } from 'naive-ui'
 import { computed, onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
-import type { SelectAdvancedOption } from '../select'
-import type { QueryDataType } from '../../../common'
+import type { QueryObjectType } from '@own-basic-component/config'
+import type { SelectAdvancedOption } from './types'
 
 const props = withDefaults(defineProps<{
-  defaultValue?: Array<string | number | undefined>
+  defaultValue?: string | number
   index: number
   placeholder?: string
   field: string
@@ -23,7 +23,7 @@ const emits = defineEmits<{
 /**
  * 具体的值
  */
-const value = ref<Array<string | number | undefined>>()
+const value = ref<string | number | undefined>()
 
 /**
  * 是否允许动态添加
@@ -46,28 +46,27 @@ onMounted(() => {
 function handleChangeValue() {
   sendAe({
     actionName: 'search',
-    actionType: 'select-multiple',
+    actionType: 'select',
     actionValue: value.value,
   })
   emits('searchAction')
 }
 
 defineExpose({
-  getParams: (): QueryDataType => ({ [props.field]: value.value }),
+  getParams: (): QueryObjectType => ({ [props.field]: value.value }),
 })
 </script>
 
 <template>
   <NSelect
     :key="props.index"
-    v-model:value="value as []"
+    v-model:value="value"
     :disabled="props.disabled"
     :filterable="filterable"
     :options="props.extra?.options"
     :placeholder="props.placeholder"
     :tag="tag"
     clearable
-    multiple
     @update:value="handleChangeValue"
   />
 </template>

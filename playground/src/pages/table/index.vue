@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import type { PageResultModel, ResultModel } from '@own-basic-component/config'
+import type { PageResultModel, QueryObjectType, ResultModel } from '@own-basic-component/config'
 import { format } from 'date-fns'
-import type { OperationProps, QueryDataType } from '../../../../packages/naive/src'
+import type { OperationProps } from '../../../../packages/naive/src'
 import { BaseTableHelper } from '../../../../packages/naive/src'
 
 interface DataType {
@@ -26,7 +26,7 @@ const originList = Array.from({ length: 100 }).map((_, index) => ({
   title: `title${index + 1}`,
 }))
 
-function fetch(query?: QueryDataType): Promise<ResultModel<PageResultModel<DataType>>> {
+function fetch(query?: QueryObjectType): Promise<ResultModel<PageResultModel<DataType>>> {
   const rows = (query?.rows || 10) as number
   const page = (query?.page || 1) as number
   const total = originList.length

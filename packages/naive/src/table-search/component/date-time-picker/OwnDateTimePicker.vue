@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { NInputNumber } from 'naive-ui'
-import { onMounted, ref } from 'vue'
+import { format } from 'date-fns'
+import { NDatePicker } from 'naive-ui'
+import { computed, onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
-import type { QueryDataType } from '../../../common'
-import type { NumberAdvancedExtra } from './types'
+import type { QueryObjectType } from '@own-basic-component/config'
+import type { DateTimePicker } from './types'
 
 const props = withDefaults(defineProps<{
   defaultValue?: number
@@ -11,7 +12,7 @@ const props = withDefaults(defineProps<{
   placeholder?: string
   field: string
   disabled?: boolean
-  extra?: NumberAdvancedExtra
+  extra?: DateTimePicker
 }>(), {
   placeholder: '',
 })
@@ -21,9 +22,14 @@ const emits = defineEmits<{
 }>()
 
 /**
- * 具体的值
+ * 具体的时间值（时间戳）
  */
 const value = ref<number | undefined>()
+
+/**
+ * 格式化的内容
+ */
+const formatter = computed<string>(() => props.extra?.format || 'yyyy-MM-dd HH:mm:ss')
 
 onMounted(() => {
   value.value = props.defaultValue
@@ -32,27 +38,26 @@ onMounted(() => {
 function handleChangeValue() {
   sendAe({
     actionName: 'search',
-    actionType: 'number',
+    actionType: 'date-time-picker',
     actionValue: value.value,
   })
   emits('searchAction')
 }
 
 defineExpose({
-  getParams: (): QueryDataType => ({ [props.field]: value.value !== 0 ? (value.value ? value.value : undefined) : 0 }),
+  getParams: (): QueryObjectType => ({
+    [props.field]: value.value ? format(new Date(value.value), formatter.value) : undefined,
+  }),
 })
 </script>
 
 <template>
-  <NInputNumber
-    :key="props.index"
+  <NDatePicker
     v-model:value="value"
     :disabled="props.disabled"
-    :max="props.extra?.max"
-    :min="props.extra?.min"
-    :placeholder="props.placeholder"
-    :step="props.extra?.step || 1"
+    :format="formatter"
     clearable
+    type="datetime"
     @update:value="handleChangeValue"
   />
 </template>

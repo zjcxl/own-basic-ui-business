@@ -4,18 +4,16 @@ import type { DataTableBaseColumn, DataTableColumn } from 'naive-ui'
 import { NDataTable, NDivider, NPagination, NSpace } from 'naive-ui'
 import { sendAe } from '@own-basic-component/buried'
 import { computed, h, onMounted, reactive, ref, unref, watch } from 'vue'
+import { BaseTableSearchHelper, calcPageSizes } from '../table-search'
+import TableLineOperation from './component/TableLineOperation.vue'
+import { defaultDataTableProps, getOperationColumn } from '.'
 import type {
+  DataTableProps,
   OperationProps,
-  PageInfo,
   RowDataType,
   TableInstanceType,
   TableSlotsType,
-} from '../common'
-import { getOperationColumn } from '../common'
-import { BaseTableSearchHelper, calcPageSizes } from '../table-search'
-import type { DataTableProps } from './types'
-import { defaultDataTableProps } from './types'
-import TableLineOperation from './component/TableLineOperation.vue'
+} from '.'
 
 /**
  * 定义表格组件参数
@@ -79,7 +77,11 @@ const baseTableSearchHelper = ref<InstanceType<typeof BaseTableSearchHelper>>()
 /**
  * 定义分页的参数信息
  */
-const pageInfo = reactive<PageInfo>({
+const pageInfo = reactive<{
+  page: number
+  rows: number
+  total: number
+}>({
   page: unref(props.defaultPage),
   rows: unref(props.defaultRows),
   total: 0,
@@ -249,9 +251,9 @@ const helperType = props.helperType
         :render-cell="renderOperationCell as any"
       />
     </div>
-    <div v-else>
-      <template v-if="slots.data">
-        <slot :list="dataList as T[]" name="data" />
+    <div v-else-if="'list'">
+      <template v-if="slots['data-list']">
+        <slot :list="dataList as T[]" name="data-list" />
       </template>
     </div>
     <br>

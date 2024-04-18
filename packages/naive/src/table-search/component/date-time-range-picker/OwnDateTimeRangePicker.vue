@@ -3,8 +3,8 @@ import { format } from 'date-fns'
 import { NDatePicker } from 'naive-ui'
 import { computed, onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
-import type { QueryDataType } from '../../../common'
-import type { DateRangeFieldFormatType, DateRangePicker, DateRangeShortcutsType } from './types'
+import type { QueryObjectType } from '@own-basic-component/config'
+import type { DateTimeRangeFieldFormatType, DateTimeRangePicker, DateTimeRangeShortcutsType } from './types'
 
 const props = withDefaults(defineProps<{
   defaultValue?: [number, number]
@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<{
   placeholder?: string
   field: string
   disabled?: boolean
-  extra?: DateRangePicker
+  extra?: DateTimeRangePicker
 }>(), {
   placeholder: '',
 })
@@ -29,16 +29,29 @@ const value = ref<[number, number] | undefined>()
 /**
  * 格式化的内容
  */
-const formatter = computed<string>(() => props.extra?.format || 'yyyy-MM-dd')
+const formatter = computed<string>(() => props.extra?.format || 'yyyy-MM-dd HH:mm:ss')
+
+/**
+ * 默认的字段格式化数组
+ */
+const defaultDateTimeRangeFieldFormat: DateTimeRangeFieldFormatType = [
+  (field: string) => `${field}Start`,
+  (field: string) => `${field}End`,
+]
+
+/**
+ * 字段格式化数组
+ */
+const fieldFormatArray = computed<DateTimeRangeFieldFormatType>(() => props.extra?.fieldFormat || defaultDateTimeRangeFieldFormat)
 
 /**
  * 快捷操作
  */
-const finalShortcuts = computed<DateRangeShortcutsType>(() => {
+const finalShortcuts = computed<DateTimeRangeShortcutsType>(() => {
   if (props.extra?.shortcuts && props.extra?.shortcutsSetting?.second) {
     // 元组第二位的值减second
     const t = props.extra?.shortcutsSetting?.second
-    const resultMap: DateRangeShortcutsType = {}
+    const resultMap: DateTimeRangeShortcutsType = {}
     Object.keys(props.extra?.shortcuts).forEach((key) => {
       const [time1, time2] = props.extra?.shortcuts?.[key] || [0, 0]
       resultMap[key] = [time1, time2 - t]
@@ -48,19 +61,6 @@ const finalShortcuts = computed<DateRangeShortcutsType>(() => {
   return props.extra?.shortcuts || {}
 })
 
-/**
- * 默认的字段格式化数组
- */
-const defaultDateTimeRangeFieldFormat: DateRangeFieldFormatType = [
-  (field: string) => `${field}Start`,
-  (field: string) => `${field}End`,
-]
-
-/**
- * 字段格式化数组
- */
-const fieldFormatArray = computed<DateRangeFieldFormatType>(() => props.extra?.fieldFormat || defaultDateTimeRangeFieldFormat)
-
 onMounted(() => {
   value.value = props.defaultValue
 })
@@ -68,15 +68,15 @@ onMounted(() => {
 function handleChangeValue() {
   sendAe({
     actionName: 'search',
-    actionType: 'date-range-picker',
+    actionType: 'date-time-range-picker',
     actionValue: value.value,
   })
   emits('searchAction')
 }
 
 defineExpose({
-  getParams: (): QueryDataType => {
-    const result = {} as QueryDataType
+  getParams: (): QueryObjectType => {
+    const result = {} as QueryObjectType
     fieldFormatArray.value.forEach((method, index) => {
       result[method(props.field)] = value.value?.[index] ? format(new Date(value.value[index]), formatter.value) : undefined
     })
@@ -92,7 +92,7 @@ defineExpose({
     :format="formatter"
     :shortcuts="finalShortcuts"
     clearable
-    type="daterange"
+    type="datetimerange"
     @update:value="handleChangeValue"
   />
 </template>

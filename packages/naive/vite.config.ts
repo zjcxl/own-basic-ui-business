@@ -2,7 +2,6 @@
 
 import { resolve } from 'node:path'
 import Vue from '@vitejs/plugin-vue'
-import VueJsx from '@vitejs/plugin-vue-jsx'
 import { defineConfig } from 'vite'
 import ViteDts from 'vite-plugin-dts'
 import VueMacros from 'unplugin-vue-macros/vite'
@@ -21,7 +20,6 @@ export default defineConfig({
         }),
       },
     }),
-    VueJsx(),
     ViteDts(),
   ],
   build: {

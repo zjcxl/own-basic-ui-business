@@ -1,5 +1,7 @@
+import type { Ref } from 'vue'
+
 import type { DataTableColumn } from 'naive-ui'
-import type { OperationExtra, OperationProps } from './operation-props'
+import type { OperationExtra, OperationProps, TableInstanceType } from '.'
 
 const FIELD_OPERATION = 'operation'
 // 单个字符的长度是14
@@ -11,6 +13,32 @@ const LEFT_BLANK_LENGTH = 17
 const RIGHT_BLANK_LENGTH = 16
 // 更多按钮的长度
 const MORE_BUTTON_LENGTH = RIGHT_BLANK_LENGTH + CHAR_LENGTH * 3
+
+/**
+ * 使用自定义的表格帮助方法
+ * @param tableHelper
+ */
+export function useCustomTableHelper<T>(
+  tableHelper?: Ref<TableInstanceType<T> | undefined>,
+) {
+  /**
+   * 刷新的方法
+   * @param pageInit
+   */
+  function refresh(pageInit: number | boolean = false): void {
+    tableHelper?.value!.refresh(pageInit)
+  }
+
+  /**
+   * 获取列表数据
+   */
+  const getDataList = () => tableHelper?.value!.getDataList()
+
+  return {
+    refresh,
+    getDataList,
+  }
+}
 
 /**
  * 获取操作栏的属性

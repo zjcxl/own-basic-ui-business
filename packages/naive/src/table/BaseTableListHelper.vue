@@ -1,10 +1,8 @@
-<script generic="T = RowDataType" lang="ts" setup>
+<script generic="T" lang="ts" setup>
 import { ref } from 'vue'
-import type { RowDataType, TableInstanceType, TableSlotsType } from '../common'
 import BaseRealTableHelper from './BaseRealTableHelper.vue'
-import type { DataTableProps } from './types'
-import { defaultDataTableProps } from './types'
-import { useCustomTableHelper } from './utils'
+import type { DataTableProps, TableInstanceType, TableSlotsType } from '.'
+import { defaultDataTableProps, useCustomTableHelper } from '.'
 
 /**
  * 定义表格组件参数
@@ -38,14 +36,16 @@ defineExpose({ refresh, getDataList })
   <BaseRealTableHelper
     ref="baseRealTableHelper"
     v-bind="props"
-    :columns="columns"
-    helper-type="table"
+    helper-type="list"
   >
     <template v-if="slots.search" #search>
       <slot name="search" />
     </template>
     <template v-if="slots.operation" #operation>
       <slot name="operation" />
+    </template>
+    <template v-if="slots['data-list']" #data-list="{ list }">
+      <slot :list="list as T[]" name="data-list" />
     </template>
   </BaseRealTableHelper>
 </template>

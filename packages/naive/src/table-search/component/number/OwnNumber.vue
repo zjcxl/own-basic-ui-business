@@ -1,15 +1,17 @@
 <script lang="ts" setup>
-import { NInput } from 'naive-ui'
+import { NInputNumber } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
-import type { QueryDataType } from '../../../common'
+import type { QueryObjectType } from '@own-basic-component/config'
+import type { NumberAdvancedExtra } from './types'
 
 const props = withDefaults(defineProps<{
-  defaultValue?: string
+  defaultValue?: number
   index: number
   placeholder?: string
   field: string
   disabled?: boolean
+  extra?: NumberAdvancedExtra
 }>(), {
   placeholder: '',
 })
@@ -21,7 +23,7 @@ const emits = defineEmits<{
 /**
  * 具体的值
  */
-const value = ref<string | undefined>()
+const value = ref<number | undefined>()
 
 onMounted(() => {
   value.value = props.defaultValue
@@ -30,24 +32,27 @@ onMounted(() => {
 function handleChangeValue() {
   sendAe({
     actionName: 'search',
-    actionType: 'input',
+    actionType: 'number',
     actionValue: value.value,
   })
   emits('searchAction')
 }
 
 defineExpose({
-  getParams: (): QueryDataType => ({ [props.field]: value.value }),
+  getParams: (): QueryObjectType => ({ [props.field]: value.value !== 0 ? (value.value ? value.value : undefined) : 0 }),
 })
 </script>
 
 <template>
-  <NInput
+  <NInputNumber
     :key="props.index"
     v-model:value="value"
     :disabled="props.disabled"
+    :max="props.extra?.max"
+    :min="props.extra?.min"
     :placeholder="props.placeholder"
+    :step="props.extra?.step || 1"
     clearable
-    @keydown.enter="handleChangeValue"
+    @update:value="handleChangeValue"
   />
 </template>
