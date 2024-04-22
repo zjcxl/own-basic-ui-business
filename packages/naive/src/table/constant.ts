@@ -11,6 +11,7 @@ type InferDefaults<T> = {
  */
 export function defaultDataTableProps<T>(): InferDefaults<DataTableProps<T>> {
   return {
+    isShowDividerData: true,
     dividerName: '数据列表',
     defaultPage: 1,
     defaultRows: 10,
@@ -19,6 +20,7 @@ export function defaultDataTableProps<T>(): InferDefaults<DataTableProps<T>> {
     beforeFetch: undefined,
     fetchMethod: undefined,
     helperType: 'table',
+    isShowSearch: true,
     search: () => ([]),
     searchExtra: () => ({}),
     operations: () => ([]),

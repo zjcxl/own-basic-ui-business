@@ -45,5 +45,8 @@ defineExpose({ refresh, getDataList })
     <template v-if="slots.operation" #operation>
       <slot name="operation" />
     </template>
+    <template v-if="slots.tips" #tips>
+      <slot name="tips" />
+    </template>
   </BaseRealTableHelper>
 </template>

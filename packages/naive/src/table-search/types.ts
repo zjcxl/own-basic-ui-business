@@ -97,8 +97,14 @@ export interface BaseSearchProps<TYPE extends DefaultSearchPropsKeyType, VALUE_T
 export interface SearchExtra {
   /**
    * 搜索按钮的文本
+   * @default '查询'
    */
   searchButtonText?: string
+  /**
+   * 是否显示重置查询条件的按钮
+   * @default true
+   */
+  showResetButton?: boolean
 }
 
 /**

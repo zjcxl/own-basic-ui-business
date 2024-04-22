@@ -63,11 +63,17 @@ export interface TableSlotsType<T = RowDataType> {
   'default'?: () => void
   'search'?: () => void
   'operation'?: () => void
+  'tips'?: () => void
   'data-list'?: (params: { list: T[] }) => void
   'data-grid'?: (params: { data: T }) => void
 }
 
 export interface DataTableProps<T = RowDataType> {
+  /**
+   * 基础的参数
+   * @default true
+   */
+  'isShowDividerData': boolean
   /**
    * 分隔栏名称
    * @default '数据列表'
@@ -108,6 +114,11 @@ export interface DataTableProps<T = RowDataType> {
    * @default 'table'
    */
   'helperType'?: 'table' | 'list' | 'grid'
+  /**
+   * 是否显示搜索栏
+   * @default true
+   */
+  'isShowSearch'?: boolean
   /**
    * 搜索栏的配置
    * @default []

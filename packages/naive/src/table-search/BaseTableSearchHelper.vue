@@ -7,10 +7,14 @@ import type { CustomSearchItem, DefaultSearchPropsValueType, SearchExtra } from 
 import { calcSearchItems } from '.'
 
 const props = defineProps<{
-  // 搜索栏的配置
+  /**
+   * 搜索栏的配置
+   */
   search: Array<DefaultSearchPropsValueType>
-  // 搜索栏的额外参数
-  searchExtra: SearchExtra
+  /**
+   * 搜索栏的额外参数
+   */
+  extra: SearchExtra
 }>()
 
 const emits = defineEmits<{
@@ -99,13 +103,13 @@ defineExpose({
       </template>
       <NButton v-buried type="primary" @click="handleClickSearch">
         <template #default>
-          {{ searchExtra?.searchButtonText || '搜索' }}
+          {{ extra?.searchButtonText || '搜索' }}
         </template>
         <template #icon>
           <SearchOutline />
         </template>
       </NButton>
-      <NButton v-buried type="primary" @click="handleReset">
+      <NButton v-if="extra?.showResetButton ?? true" v-buried type="primary" @click="handleReset">
         <template #default>
           重置
         </template>

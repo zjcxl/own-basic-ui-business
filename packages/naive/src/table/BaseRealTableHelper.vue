@@ -229,7 +229,8 @@ const helperType = props.helperType
 <template>
   <div>
     <BaseTableSearchHelper
-      ref="baseTableSearchHelper" :search="search" :search-extra="searchExtra"
+      v-if="props.isShowSearch"
+      ref="baseTableSearchHelper" :search="search" :extra="searchExtra"
       @search-action="params => fetchData(params, 1)"
     >
       <template v-if="slots.search" #search>
@@ -239,7 +240,7 @@ const helperType = props.helperType
         <slot name="operation" />
       </template>
     </BaseTableSearchHelper>
-    <NDivider title-placement="left">
+    <NDivider v-if="props.isShowDividerData" title-placement="left">
       {{ dividerName }}
     </NDivider>
     <div v-if="helperType === 'table'" style="overflow: auto">
@@ -270,5 +271,8 @@ const helperType = props.helperType
         @update:page-size="handleChangePageSize"
       />
     </NSpace>
+    <div v-if="slots.tips">
+      <slot name="tips" />
+    </div>
   </div>
 </template>

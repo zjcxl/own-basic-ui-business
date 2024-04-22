@@ -47,5 +47,8 @@ defineExpose({ refresh, getDataList })
     <template v-if="slots['data-list']" #data-list="{ list }">
       <slot :list="list as T[]" name="data-list" />
     </template>
+    <template v-if="slots.tips" #tips>
+      <slot name="tips" />
+    </template>
   </BaseRealTableHelper>
 </template>
