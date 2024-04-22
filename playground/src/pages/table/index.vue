@@ -61,13 +61,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <br>
   <BaseTableHelper
+    :is-show-divider-data="false"
+    :is-show-search="false"
     :columns="columns"
     :fetch-method="fetch"
     :operations="operationColumn"
-  >
-    <template #operation />
-  </BaseTableHelper>
+  />
   <br>
 </template>

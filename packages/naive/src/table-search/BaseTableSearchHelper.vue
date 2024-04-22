@@ -17,7 +17,6 @@ const props = withDefaults(defineProps<{
   extra?: SearchExtra
 }>(), {
   search: () => ([]),
-
 })
 
 const emits = defineEmits<{
@@ -96,7 +95,7 @@ defineExpose({
 </script>
 
 <template>
-  <template v-if="visible">
+  <div v-if="visible" style="margin-bottom: 1rem;">
     <NSpace align="center" justify="start">
       <div v-for="(item, index) in itemMainList" :key="index" :style="item.style">
         <component :is="item.component" ref="componentItemMainList" @search-action="handleClickSearch" />
@@ -137,5 +136,5 @@ defineExpose({
         <component :is="item.component" ref="componentItemMinorList" @search-action="handleClickSearch" />
       </div>
     </NSpace>
-  </template>
+  </div>
 </template>
