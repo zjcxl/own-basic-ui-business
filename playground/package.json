@@ -17,7 +17,7 @@
     "@own-basic-component/util": "^0.8.46",
     "@own-basic-component/vue": "^0.8.46",
     "@vueuse/core": "^10.9.0",
-    "vue": "3.4.21",
+    "vue": "^3.4.23",
     "vue-router": "^4.3.2"
   },
   "devDependencies": {

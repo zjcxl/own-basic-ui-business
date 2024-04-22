@@ -73,7 +73,7 @@ export interface DataTableProps<T = RowDataType> {
    * 基础的参数
    * @default true
    */
-  'isShowDividerData': boolean
+  'isShowDividerData'?: boolean
   /**
    * 分隔栏名称
    * @default '数据列表'
