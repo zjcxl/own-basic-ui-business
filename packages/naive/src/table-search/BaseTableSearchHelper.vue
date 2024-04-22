@@ -6,16 +6,19 @@ import { computed, nextTick, ref } from 'vue'
 import type { CustomSearchItem, DefaultSearchPropsValueType, SearchExtra } from '.'
 import { calcSearchItems } from '.'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   /**
    * 搜索栏的配置
    */
-  search: Array<DefaultSearchPropsValueType>
+  search?: Array<DefaultSearchPropsValueType>
   /**
    * 搜索栏的额外参数
    */
-  extra: SearchExtra
-}>()
+  extra?: SearchExtra
+}>(), {
+  search: () => ([]),
+
+})
 
 const emits = defineEmits<{
   searchAction: [QueryObjectType]

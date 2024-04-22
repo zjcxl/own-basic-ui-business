@@ -27,6 +27,7 @@ onMounted(() => {
     <BaseTableSearchHelper
       ref="baseTableSearchHelper"
       :search="search"
+      extra=""
       @search-action="consoleLogParams"
     />
   </div>
