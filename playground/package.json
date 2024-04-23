@@ -11,13 +11,13 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@own-basic-component/config": "^0.8.46",
-    "@own-basic-component/request": "^0.8.46",
-    "@own-basic-component/request-axios": "^0.8.46",
-    "@own-basic-component/util": "^0.8.46",
-    "@own-basic-component/vue": "^0.8.46",
+    "@own-basic-component/config": "^0.8.48",
+    "@own-basic-component/request": "^0.8.48",
+    "@own-basic-component/request-axios": "^0.8.48",
+    "@own-basic-component/util": "^0.8.48",
+    "@own-basic-component/vue": "^0.8.48",
     "@vueuse/core": "^10.9.0",
-    "vue": "^3.4.23",
+    "vue": "^3.4.24",
     "vue-router": "^4.3.2"
   },
   "devDependencies": {
