@@ -120,7 +120,12 @@ defineExpose({
         </template>
       </NButton>
       <NButton
-        v-if="itemMinorList.length > 0" v-buried quaternary type="success"
+        v-if="itemMinorList.length > 0"
+        v-buried
+        tag="a"
+        text
+        quaternary
+        type="success"
         @click="visibleMinorList = !visibleMinorList"
       >
         {{ visibleMinorList ? '收起更多' : '展开更多' }}

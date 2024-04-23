@@ -1,13 +1,15 @@
 <script generic="T = RowDataType" lang="ts" setup>
 import type { PageResultModel, QueryObjectType, ResultModel } from '@own-basic-component/config'
 import type { DataTableBaseColumn, DataTableColumn } from 'naive-ui'
-import { NDataTable, NDivider, NPagination, NSpace } from 'naive-ui'
+import { NDataTable, NDivider, NPagination } from 'naive-ui'
 import { sendAe } from '@own-basic-component/buried'
 import { computed, h, onMounted, reactive, ref, unref, watch } from 'vue'
+import type { OnUpdateCheckedRowKeys } from 'naive-ui/es/data-table/src/interface'
 import { BaseTableSearchHelper, calcPageSizes } from '../table-search'
 import TableLineOperation from './component/TableLineOperation.vue'
 import { defaultDataTableProps, getOperationColumn } from '.'
 import type {
+  BatchOperationProps,
   DataTableProps,
   OperationProps,
   RowDataType,
@@ -120,6 +122,7 @@ async function fetchData(params?: QueryObjectType, page: number = pageInfo.page)
       dataList.value = response.data.list
     })
   }
+  initSelectInfo()
 }
 
 /**
@@ -218,7 +221,64 @@ watch(
   { immediate: true },
 )
 
+/**
+ * 选中事件
+ */
+const handleSelectRowsMethod = ref<OnUpdateCheckedRowKeys | undefined>()
+
+const selectInfo = reactive<{
+  count: number
+  rowKeys: any[]
+  array: any[]
+}>({
+  count: 0,
+  rowKeys: [],
+  array: [],
+})
+
+/**
+ * 初始化选中信息
+ */
+function initSelectInfo() {
+  selectInfo.count = 0
+  selectInfo.rowKeys = []
+  selectInfo.array = []
+}
+/**
+ * 最终展示的批量操作列信息
+ */
+const showBatchOperations = computed<BatchOperationProps<T>[]>(() => {
+  return props.batchOperations
+    .filter(item => item.hidden === undefined || !item.hidden)
+    .filter((item) => {
+      if (item.permission === undefined)
+        return true
+      if (item.permission instanceof Function)
+        return item.permission()
+      return item.permission
+    })
+})
+
+/**
+ * 初始化选中的事件
+ */
+function initSelectRowsMethod() {
+  if (props.helperType === 'table') {
+    // 获取第一列的type
+    if (props.columns?.[0]?.type === 'selection') {
+      handleSelectRowsMethod.value = (rowKeys, array) => {
+        selectInfo.count = rowKeys.length
+        selectInfo.rowKeys = rowKeys
+        selectInfo.array = array as T[]
+      }
+    }
+  }
+}
+
 onMounted(async () => {
+  // 创建选中的事件
+  initSelectRowsMethod()
+  // 执行请求
   await fetchData()
 })
 
@@ -250,6 +310,8 @@ const helperType = props.helperType
         :data="dataList"
         :pagination="false"
         :render-cell="renderOperationCell as any"
+        :checked-row-keys="selectInfo.rowKeys"
+        @update:checked-row-keys="handleSelectRowsMethod"
       />
     </div>
     <div v-else-if="'list'">
@@ -258,8 +320,27 @@ const helperType = props.helperType
       </template>
     </div>
     <br>
-    <NSpace justify="end">
+    <div style="display: flex;justify-content: space-between;align-items: center;">
+      <div
+        v-if="selectInfo.count > 0"
+        style="display: flex;align-items: center;gap: 1rem;"
+      >
+        <div>已选中<span style="width: 1.5em;display: inline-block;text-align: center;">{{ selectInfo.count }}</span>项</div>
+        <NButton
+          v-for="(item, index) in showBatchOperations"
+          :key="index"
+          :type="item.type || 'default'"
+          size="small"
+          tag="a"
+          text
+          @click="item.action(selectInfo.array as T[])"
+        >
+          {{ item.title }}
+        </NButton>
+      </div>
+      <div v-else />
       <NPagination
+        style="flex: 0 0 auto;"
         :item-count="pageInfo.total"
         :page="pageInfo.page"
         :page-size="pageInfo.rows"
@@ -270,7 +351,7 @@ const helperType = props.helperType
         @update:page="handleChangePage"
         @update:page-size="handleChangePageSize"
       />
-    </NSpace>
+    </div>
     <div v-if="slots.tips">
       <slot name="tips" />
     </div>

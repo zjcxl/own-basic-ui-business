@@ -6,7 +6,7 @@ import type {
   CreateRowProps,
   CreateSummary,
   DataTableOnLoad,
-  OnUpdateCheckedRowKeys,
+  InternalRowData,
   OnUpdateExpandedRowKeys,
   OnUpdateFilters,
   OnUpdateSorter,
@@ -139,6 +139,11 @@ export interface DataTableProps<T = RowDataType> {
    * @default {}
    */
   'operationExtra'?: OperationExtra
+  /**
+   * 批量操作
+   * @default []
+   */
+  'batchOperations'?: BatchOperationProps<T>[]
 
   /** NDataTable 组件的参数 */
 
@@ -364,9 +369,15 @@ export interface DataTableProps<T = RowDataType> {
   /**
    * checked-row-keys 值改变时触发的回调函数
    * @default undefined
+   * @deprecated
    */
-  'onUpdate:checkedRowKeys'?: MaybeArray<OnUpdateCheckedRowKeys>
-  'onUpdateCheckedRowKeys'?: MaybeArray<OnUpdateCheckedRowKeys>
+  'onUpdate:checkedRowKeys'?: MaybeArray<CustomOnUpdateCheckedRowKeys<T>>
+  /**
+   * checked-row-keys 值改变时触发的回调函数
+   * @default undefined
+   * @deprecated
+   */
+  'onUpdateCheckedRowKeys'?: MaybeArray<CustomOnUpdateCheckedRowKeys<T>>
   /**
    * expanded-row-keys 值改变时触发的回调函数
    * @default undefined
@@ -379,6 +390,14 @@ export interface DataTableProps<T = RowDataType> {
    */
   'onScroll'?: (e: Event) => void
 }
+
+/**
+ * 自定义更新选中行的方法
+ */
+export type CustomOnUpdateCheckedRowKeys<T = InternalRowData> = (keys: RowKey[], rows: T[], meta: {
+  row: InternalRowData | undefined
+  action: 'check' | 'uncheck' | 'checkAll' | 'uncheckAll'
+}) => void
 
 /**
  * 表格的操作列对象接口
@@ -439,6 +458,35 @@ export interface OperationProps<T> {
    * @param el 当前行的元素
    */
   action: (record: T, el?: HTMLElement | null) => void
+}
+
+/**
+ * 表格的批量操作列对象接口
+ */
+export interface BatchOperationProps<T> {
+  /**
+   * 操作名称
+   */
+  title: string
+  /**
+   * 是否隐藏，默认不隐藏
+   */
+  hidden?: boolean
+  /**
+   * 按钮类型
+   * @default 'default'
+   */
+  type?: 'default' | 'tertiary' | 'primary' | 'success' | 'info' | 'warning' | 'error'
+  /**
+   * 权限判断（以当前的路由信息进行判断）
+   */
+  permission?: boolean | (() => boolean)
+
+  /**
+   * 点击后调用的方法
+   * @param recordList 选中的记录行
+   */
+  action: (recordList: T[]) => void
 }
 
 /**

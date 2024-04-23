@@ -25,6 +25,7 @@ export function defaultDataTableProps<T>(): InferDefaults<DataTableProps<T>> {
     searchExtra: () => ({}),
     operations: () => ([]),
     operationExtra: () => ({}),
+    batchOperations: () => ([]),
     pagination: false,
     paginateSinglePage: true,
     minHeight: undefined,
