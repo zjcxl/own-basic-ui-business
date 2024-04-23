@@ -83,8 +83,8 @@ const resultColumns = computed<DataTableColumn<T>[]>(() => {
   // 判断有没有选中行的操作
   if (props.helperType === 'table') {
     const array = customOperationColumn.value
-      ? [...(props.columns || []).slice(1), customOperationColumn.value]
-      : (props.columns || []).slice(1)
+      ? [...(props.columns || []), customOperationColumn.value]
+      : (props.columns || [])
     if (customBatchOperationColumn.value)
       array.unshift(customBatchOperationColumn.value)
     return array
