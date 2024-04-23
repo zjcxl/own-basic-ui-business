@@ -4,7 +4,7 @@ import type { DataTableBaseColumn, DataTableColumn } from 'naive-ui'
 import { NDataTable, NDivider, NPagination } from 'naive-ui'
 import { sendAe } from '@own-basic-component/buried'
 import { computed, h, onMounted, reactive, ref, unref, watch } from 'vue'
-import type { OnUpdateCheckedRowKeys } from 'naive-ui/es/data-table/src/interface'
+import type { OnUpdateCheckedRowKeys, RowKey } from 'naive-ui/es/data-table/src/interface'
 import { BaseTableSearchHelper, calcPageSizes } from '../table-search'
 import TableLineOperation from './component/TableLineOperation.vue'
 import { defaultDataTableProps, getOperationColumn } from '.'
@@ -64,12 +64,33 @@ const defaultRows = unref(props.defaultRows)
 const customOperationColumn = ref<DataTableColumn<T>>()
 
 /**
+ * 自定义的批量操作列
+ */
+const customBatchOperationColumn = computed<DataTableColumn<T> | undefined>(() => {
+  if (props.batchOperations.length > 0) {
+    return {
+      type: 'selection',
+      multiple: props.batchOperationsMultiple,
+    }
+  }
+  return undefined
+})
+
+/**
  * 最终的操作列信息
  */
-const resultColumns = computed<DataTableColumn<T>[]>(() => customOperationColumn.value
-  ? [...(props.columns || []), customOperationColumn.value]
-  : props.columns || [],
-)
+const resultColumns = computed<DataTableColumn<T>[]>(() => {
+  // 判断有没有选中行的操作
+  if (props.helperType === 'table') {
+    const array = customOperationColumn.value
+      ? [...(props.columns || []).slice(1), customOperationColumn.value]
+      : (props.columns || []).slice(1)
+    if (customBatchOperationColumn.value)
+      array.unshift(customBatchOperationColumn.value)
+    return array
+  }
+  return []
+})
 
 /**
  * 表格实例
@@ -228,7 +249,7 @@ const handleSelectRowsMethod = ref<OnUpdateCheckedRowKeys | undefined>()
 
 const selectInfo = reactive<{
   count: number
-  rowKeys: any[]
+  rowKeys: RowKey[]
   array: any[]
 }>({
   count: 0,
@@ -265,7 +286,7 @@ const showBatchOperations = computed<BatchOperationProps<T>[]>(() => {
 function initSelectRowsMethod() {
   if (props.helperType === 'table') {
     // 获取第一列的type
-    if (props.columns?.[0]?.type === 'selection') {
+    if (props.batchOperations.length > 0) {
       handleSelectRowsMethod.value = (rowKeys, array) => {
         selectInfo.count = rowKeys.length
         selectInfo.rowKeys = rowKeys
@@ -333,7 +354,7 @@ const helperType = props.helperType
           size="small"
           tag="a"
           text
-          @click="item.action(selectInfo.array as T[])"
+          @click="item.action(selectInfo.rowKeys, selectInfo.array as T[])"
         >
           {{ item.title }}
         </NButton>

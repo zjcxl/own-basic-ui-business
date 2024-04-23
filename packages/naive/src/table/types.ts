@@ -144,6 +144,11 @@ export interface DataTableProps<T = RowDataType> {
    * @default []
    */
   'batchOperations'?: BatchOperationProps<T>[]
+  /**
+   * 批量操作是否允许多选
+   * @default true
+   */
+  'batchOperationsMultiple'?: boolean
 
   /** NDataTable 组件的参数 */
 
@@ -486,7 +491,10 @@ export interface BatchOperationProps<T> {
    * 点击后调用的方法
    * @param recordList 选中的记录行
    */
-  action: (recordList: T[]) => void
+  action: (
+    keys: RowKey[],
+    recordList: T[]
+  ) => void
 }
 
 /**

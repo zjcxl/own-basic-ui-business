@@ -14,9 +14,6 @@ interface DataType {
 
 const columns: DataTableColumns<DataType> = [
   {
-    type: 'selection',
-  },
-  {
     title: '#',
     key: 'id',
   },
