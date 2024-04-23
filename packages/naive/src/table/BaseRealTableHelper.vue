@@ -1,7 +1,7 @@
 <script generic="T = RowDataType" lang="ts" setup>
 import type { PageResultModel, QueryObjectType, ResultModel } from '@own-basic-component/config'
 import type { DataTableBaseColumn, DataTableColumn } from 'naive-ui'
-import { NDataTable, NDivider, NPagination } from 'naive-ui'
+import { NButton, NDataTable, NDivider, NPagination } from 'naive-ui'
 import { sendAe } from '@own-basic-component/buried'
 import { computed, h, onMounted, reactive, ref, unref, watch } from 'vue'
 import type { OnUpdateCheckedRowKeys, RowKey } from 'naive-ui/es/data-table/src/interface'
