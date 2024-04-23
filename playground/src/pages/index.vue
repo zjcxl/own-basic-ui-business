@@ -2,9 +2,15 @@
 </script>
 
 <template>
-  <div>
-    <div>配置</div>
-    <div>table</div>
-    <div>table-search</div>
+  <div class="flex flex-col gap-2">
+    <RouterLink to="config" class="hover:color-red">
+      配置
+    </RouterLink>
+    <RouterLink to="table" class="hover:color-red">
+      table
+    </RouterLink>
+    <RouterLink to="table-search" class="hover:color-red">
+      table-search
+    </RouterLink>
   </div>
 </template>
