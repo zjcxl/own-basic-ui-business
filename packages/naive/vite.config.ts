@@ -28,13 +28,6 @@ export default defineConfig({
     ViteDts(),
     CssInjectedByJsPlugin(),
   ],
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-      },
-    },
-  },
   build: {
     target: 'modules',
     lib: {
