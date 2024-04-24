@@ -5,6 +5,7 @@ import Vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 import ViteDts from 'vite-plugin-dts'
 import VueMacros from 'unplugin-vue-macros/vite'
+import CssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
 export default defineConfig({
   plugins: [
@@ -21,6 +22,7 @@ export default defineConfig({
       },
     }),
     ViteDts(),
+    CssInjectedByJsPlugin(),
   ],
   css: {
     preprocessorOptions: {

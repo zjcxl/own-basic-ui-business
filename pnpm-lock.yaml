@@ -116,6 +116,9 @@ importers:
       vite:
         specifier: ^5.2.10
         version: 5.2.10(@types/node@20.12.7)(less@4.2.0)
+      vite-plugin-css-injected-by-js:
+        specifier: ^3.5.0
+        version: 3.5.0(vite@5.2.10(@types/node@20.12.7)(less@4.2.0))
       vite-plugin-dts:
         specifier: ^3.9.0
         version: 3.9.0(@types/node@20.12.7)(rollup@4.13.0)(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0))
@@ -4127,6 +4130,11 @@ packages:
     resolution: {integrity: sha512-tV8h6gMj6vPzVCa7l+VGq9lwoJjW8Y79vst8QZZGiuRAfijU+EEWuc0kFpmndQrWhMMhet1jdSF+40KSZUqIIw==, tarball: https://registry.npmjs.org/vite-node/-/vite-node-1.5.0.tgz}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
+
+  vite-plugin-css-injected-by-js@3.5.0:
+    resolution: {integrity: sha512-d0QaHH9kS93J25SwRqJNEfE29PSuQS5jn51y9N9i2Yoq0FRO7rjuTeLvjM5zwklZlRrIn6SUdtOEDKyHokgJZg==, tarball: https://registry.npmjs.org/vite-plugin-css-injected-by-js/-/vite-plugin-css-injected-by-js-3.5.0.tgz}
+    peerDependencies:
+      vite: '>2.0.0-0'
 
   vite-plugin-dts@3.9.0:
     resolution: {integrity: sha512-pwFIEYQ3LZvMafkEGvNnileb6af5JuyZsBfYQrTDYxdeGEy0OS4B4hCsLPo5YGnhK5k9EzyO6BXVO6y+Lt5T2A==, tarball: https://registry.npmjs.org/vite-plugin-dts/-/vite-plugin-dts-3.9.0.tgz}
@@ -9074,6 +9082,10 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+
+  vite-plugin-css-injected-by-js@3.5.0(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)):
+    dependencies:
+      vite: 5.2.10(@types/node@20.12.7)(less@4.2.0)
 
   vite-plugin-dts@3.9.0(@types/node@20.12.7)(rollup@4.13.0)(typescript@5.4.5)(vite@5.2.10(@types/node@20.12.7)(less@4.2.0)):
     dependencies:
