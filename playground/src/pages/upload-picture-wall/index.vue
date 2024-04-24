@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ImageSelect } from '../../../../packages/naive/src'
+import { UploadPictureWall } from '../../../../packages/naive/src'
 
 const imageUrlList = ref<string[]>([
   'https://picsum.photos/500/500?random=1',
@@ -32,7 +32,7 @@ function handleChange(file: File, uploadedSizeMethod: (size: number) => void): P
 </script>
 
 <template>
-  <ImageSelect
+  <UploadPictureWall
     :default-image-list="imageUrlList"
     :max-count="9"
     @upload-file="handleChange"

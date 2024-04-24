@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { NImage, NImageGroup, NProgress } from 'naive-ui'
 import { BaseFileSelectButton } from '@own-basic-component/vue'
-import type { ImageSelectShowModel } from './types'
+import type { UploadPictureWallShowModel } from './types'
 
 const props = withDefaults(defineProps<{
   /**
@@ -65,11 +65,11 @@ const showSize = computed<string>(() => `width:${props.width}px;height:${props.h
 /**
  * 显示的图片
  */
-const resultImageList = ref<ImageSelectShowModel[]>([])
+const resultImageList = ref<UploadPictureWallShowModel[]>([])
 
 const imageRefList = ref<InstanceType<typeof NImage>[]>()
 
-const showImageList = computed<ImageSelectShowModel[]>(() => resultImageList.value.slice(0, props.maxCount))
+const showImageList = computed<UploadPictureWallShowModel[]>(() => resultImageList.value.slice(0, props.maxCount))
 
 const showUploadButton = computed<boolean>(() => resultImageList.value.length < props.maxCount)
 

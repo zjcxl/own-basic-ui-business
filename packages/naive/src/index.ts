@@ -8,4 +8,4 @@ export * from './table-search'
 export * from './config/message'
 
 // 图片选择
-export * from './image-select'
+export * from './upload-picture-wall'

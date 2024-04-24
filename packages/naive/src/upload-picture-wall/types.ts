@@ -1,4 +1,4 @@
-export interface ImageSelectShowModel {
+export interface UploadPictureWallShowModel {
 
   /**
    * 图片地址
@@ -19,11 +19,11 @@ export interface ImageSelectShowModel {
   /**
    * 大小信息
    */
-  size?: ImageSelectShowSizeModel
+  size?: UploadPictureWallSizeModel
 
 }
 
-export interface ImageSelectShowSizeModel {
+export interface UploadPictureWallSizeModel {
   /**
    * 总大小
    */
