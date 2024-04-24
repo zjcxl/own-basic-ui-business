@@ -26,6 +26,7 @@ export default defineConfig({
     // see uno.config.ts for config
     UnoCSS({}),
     ViteDts(),
+    // https://github.com/Marco-Prontera/vite-plugin-css-injected-by-js
     CssInjectedByJsPlugin(),
   ],
   build: {
