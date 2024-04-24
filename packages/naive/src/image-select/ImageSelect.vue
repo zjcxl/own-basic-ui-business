@@ -37,6 +37,10 @@ const props = withDefaults(defineProps<{
    * 修改图片数组后的回调
    */
   onChangeImageList?: (urlList: string[]) => void
+  /**
+   * 是否显示进入条件
+   */
+  progress?: boolean
 }>(), {
   width: 100,
   height: 100,
@@ -46,6 +50,7 @@ const props = withDefaults(defineProps<{
   multiple: false,
   objectFit: 'fill',
   onChangeImageList: () => {},
+  progress: false,
 })
 
 const slots = defineSlots<{
@@ -213,11 +218,15 @@ onMounted(() => {
             class="z-index-2 absolute bottom-0 left-0 h-20px w-100% flex items-center justify-center bg-white/50"
           >
             <NProgress
+              v-if="props.progress"
               type="line"
               :show-indicator="false"
               status="info"
               :percentage="(item.size?.uploaded || 0) / (item.size?.total || 1) * 100"
             />
+            <div v-else>
+              上传中...
+            </div>
           </div>
         </template>
       </div>
