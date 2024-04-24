@@ -157,12 +157,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex gap-2">
+  <div class="image-select-container">
     <NImageGroup show-toolbar-tooltip>
       <div
         v-for="(item, index) in showImageList"
         :key="`${index}_${item}`"
-        class="group relative flex cursor-pointer items-center justify-center overflow-hidden border border-rd-1"
+        class="item"
         :style="showSize"
       >
         <NImage
@@ -178,39 +178,39 @@ onMounted(() => {
             </template>
             <div
               v-else
-              class="flex cursor-pointer items-center justify-center"
+              class="placeholder"
               :style="showSize"
             >
-              <i class="i-carbon-i-carbon-image text-2em transition-colors-200 group-hover:text-red" />
+              <i class="i-carbon-i-carbon-image icon" />
             </div>
           </template>
         </NImage>
         <div
           v-if="item.status === 'done'"
-          class="z-index-1 absolute left-0 top-0 flex items-center justify-center gap-2 bg-black/50 opacity-0 transition-all-400 group-hover:opacity-100"
+          class="done-container"
           :style="showSize"
         >
           <i
-            class="i-carbon-view text-1.2em color-white hover:color-red"
+            class="icon i-carbon-view"
             @click="handleClickPreview(index)"
           />
           <i
-            class="i-carbon-trash-can text-1.2em color-white hover:color-red"
+            class="icon i-carbon-trash-can"
             @click="handleClickDelete(index)"
           />
         </div>
         <template v-if="item.status === 'uploading'">
           <div
-            class="z-index-1 absolute left-0 top-0 flex flex-col items-center justify-center gap-2 bg-black/50 opacity-100 transition-all-400"
+            class="uploading-container"
             :style="showSize"
           >
             <i
-              class="i-carbon-trash-can text-1.2em color-white hover:color-red"
+              class="icon i-carbon-trash-can"
               @click="handleClickDelete(index)"
             />
           </div>
           <div
-            class="z-index-2 absolute bottom-0 left-0 h-20px w-100% flex items-center justify-center bg-white/50"
+            class="uploading-progress"
           >
             <NProgress
               type="line"
@@ -229,11 +229,15 @@ onMounted(() => {
       @change="handleChangeFile"
     >
       <div
-        class="group flex cursor-pointer items-center justify-center border border-rd-1 border-dashed transition-colors-200 hover:border-black"
+        class="add-container"
         :style="showSize"
       >
-        <i class="i-carbon-add-large text-2em transition-colors-200 group-hover:text-red" />
+        <i class="icon i-carbon-add-large" />
       </div>
     </BaseFileSelectButton>
   </div>
 </template>
+
+<style scoped lang="less">
+@import './image-select.less';
+</style>

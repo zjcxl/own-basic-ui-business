@@ -5,7 +5,6 @@ import Vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 import ViteDts from 'vite-plugin-dts'
 import VueMacros from 'unplugin-vue-macros/vite'
-import UnoCSS from 'unocss/vite'
 
 export default defineConfig({
   plugins: [
@@ -21,11 +20,15 @@ export default defineConfig({
         }),
       },
     }),
-    // https://github.com/antfu/unocss
-    // see uno.config.ts for config
-    UnoCSS({}),
     ViteDts(),
   ],
+  css: {
+    preprocessorOptions: {
+      less: {
+        javascriptEnabled: true,
+      },
+    },
+  },
   build: {
     target: 'modules',
     lib: {

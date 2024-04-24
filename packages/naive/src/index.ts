@@ -1,5 +1,3 @@
-import 'uno.css'
-
 // 基础表格组件
 export * from './table'
 export * from './table-search'
