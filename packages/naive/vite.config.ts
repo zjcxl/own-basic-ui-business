@@ -6,6 +6,7 @@ import { defineConfig } from 'vite'
 import ViteDts from 'vite-plugin-dts'
 import VueMacros from 'unplugin-vue-macros/vite'
 import CssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
+import UnoCSS from 'unocss/vite'
 
 export default defineConfig({
   plugins: [
@@ -21,6 +22,9 @@ export default defineConfig({
         }),
       },
     }),
+    // https://github.com/antfu/unocss
+    // see uno.config.ts for config
+    UnoCSS({}),
     ViteDts(),
     CssInjectedByJsPlugin(),
   ],
