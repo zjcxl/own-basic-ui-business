@@ -1,16 +1,12 @@
 <script lang="ts" setup>
+const router = useRouter()
+const routes = router.getRoutes()
 </script>
 
 <template>
   <div class="flex flex-col gap-2">
-    <RouterLink to="config" class="hover:color-red">
-      配置
-    </RouterLink>
-    <RouterLink to="table" class="hover:color-red">
-      table
-    </RouterLink>
-    <RouterLink to="table-search" class="hover:color-red">
-      table-search
+    <RouterLink v-for="item in routes" :key="item.path" :to="item.path" class="hover:color-red">
+      {{ item.path }}
     </RouterLink>
   </div>
 </template>
