@@ -32,20 +32,20 @@ const props = withDefaults(defineProps<{
   /**
    * 选择图片后的回调
    */
-  onChange?: (file: File, uploadedSizeMethod: (size: number) => void) => Promise<string>
+  onUploadFile?: (file: File, uploadedSizeMethod: (size: number) => void) => Promise<string>
   /**
    * 修改图片数组后的回调
    */
-  onImageListChange?: (urlList: string[]) => void
+  onChangeImageList?: (urlList: string[]) => void
 }>(), {
   width: 100,
   height: 100,
   defaultImageList: () => ([]),
-  onChange: () => (Promise.resolve('')),
+  onUploadFile: () => (Promise.resolve('')),
   maxCount: 1,
   multiple: false,
   objectFit: 'fill',
-  onImageListChange: () => {},
+  onChangeImageList: () => {},
 })
 
 const slots = defineSlots<{
@@ -97,10 +97,10 @@ function resolveImageList() {
       const reader = new FileReader()
       reader.readAsDataURL(item.file)
       reader.onload = function () {
-        item.url = reader.result as string
+        item.dataUrl = reader.result as string
       }
       // 执行上传文件
-      props.onChange(item.file, (size) => {
+      props.onUploadFile(item.file, (size) => {
         if (item.size)
           item.size.uploaded = size
       }).then((url) => {
@@ -108,7 +108,7 @@ function resolveImageList() {
           item.url = url
         item.status = 'done'
         // 将所有的图片返回
-        props.onImageListChange(getImageUrlList())
+        props.onChangeImageList(getImageUrlList())
       })
     }
     else {
@@ -141,7 +141,7 @@ function handleChangeFile(fileList: File[]) {
  * 获取图片地址列表
  */
 function getImageUrlList(): string[] {
-  return resultImageList.value.filter(item => item.status === 'done').map(item => item.url)
+  return resultImageList.value.filter(item => item.status === 'done').map(item => item.url).filter(item => item.length > 0)
 }
 
 defineExpose({
@@ -170,7 +170,7 @@ onMounted(() => {
           :width="props.width"
           :height="props.height"
           object-fit="contain"
-          :src="item.url"
+          :src="item.dataUrl || item.url"
         >
           <template #placeholder>
             <template v-if="slots.placeholder">

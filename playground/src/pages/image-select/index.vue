@@ -35,6 +35,6 @@ function handleChange(file: File, uploadedSizeMethod: (size: number) => void): P
   <ImageSelect
     :default-image-list="imageUrlList"
     :max-count="9"
-    @change="handleChange"
+    @upload-file="handleChange"
   />
 </template>

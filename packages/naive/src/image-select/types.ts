@@ -5,6 +5,10 @@ export interface ImageSelectShowModel {
    */
   url: string
   /**
+   * base64图片地址
+   */
+  dataUrl?: string
+  /**
    * 文件信息
    */
   file?: File
