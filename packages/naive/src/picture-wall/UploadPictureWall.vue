@@ -93,10 +93,9 @@ const props = withDefaults(defineProps<{
   onChangeImageList: () => {
   },
   onLimitSizeOverflow: (fileList: File[]) => {
-    const limit = (props.limitSize / 1024).toFixed(2)
     fileList.forEach((file) => {
       const size = (file.size / 1024).toFixed(2)
-      useMessage().error(`你选择的图片 ${file.name} 大小为 ${size}KB，超出限制大小 ${limit}KB`)
+      useMessage().error(`你选择的图片 ${file.name} 大小为 ${size}KB，超出限制大小`)
     })
   },
   onUploadFile: () => (Promise.resolve('')),
