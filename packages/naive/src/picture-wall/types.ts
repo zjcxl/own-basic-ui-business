@@ -14,8 +14,12 @@ export interface UploadPictureWallShowModel {
   file?: File
   /**
    * 状态
+   * done - 完成
+   * uploading - 上传中
+   * error - 错误
+   * waiting - 等待中
    */
-  status: 'done' | 'uploading' | 'error'
+  status: 'done' | 'uploading' | 'error' | 'waiting'
   /**
    * 大小信息
    */

@@ -17,6 +17,7 @@ const showEditButton = ref<boolean>(true)
 const showDeleteButton = ref<boolean>(true)
 const allowUpload = ref<boolean>(true)
 const multiple = ref<boolean>(true)
+const parallelUpload = ref<boolean>(true)
 
 /**
  * 展示的图片地址列表数据
@@ -38,14 +39,10 @@ function handleUploadFile(file: File, uploadedSizeMethod: (size: number) => void
         window.clearInterval(interval)
       i++
     }, 800)
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = function () {
-      setTimeout(() => {
-        uploadedSizeMethod(file.size)
-        resolve(reader.result as string)
-      }, 1000 * uploadTime.value)
-    }
+    setTimeout(() => {
+      uploadedSizeMethod(file.size)
+      resolve('假装这个是图片地址')
+    }, 1000 * uploadTime.value)
   })
 }
 </script>
@@ -90,24 +87,28 @@ function handleUploadFile(file: File, uploadedSizeMethod: (size: number) => void
         <NFormItem label="是否允许多选">
           <NSwitch v-model:value="multiple" />
         </NFormItem>
+        <NFormItem label="是否允许并行上传">
+          <NSwitch v-model:value="parallelUpload" />
+        </NFormItem>
       </NForm>
     </div>
     <div class="grid grid-cols-2 w-100% gap-2">
       <NCard title="上传">
         <UploadPictureWall
+          :allow-upload="allowUpload"
           :default-image-list="imageUrlList"
           :max-count="maxShowCount"
-          :show-preview-button="showPreviewButton"
-          :show-edit-button="showEditButton"
-          :show-delete-button="showDeleteButton"
-          :progress="useProgress"
           :multiple="multiple"
-          :allow-upload="allowUpload"
+          :parallel-upload="parallelUpload"
+          :progress="useProgress"
+          :show-delete-button="showDeleteButton"
+          :show-edit-button="showEditButton"
+          :show-preview-button="showPreviewButton"
           @upload-file="handleUploadFile"
           @change-image-list="array => imageUrlList = array"
         />
       </NCard>
-      <NCard title="        展示">
+      <NCard title="展示">
         <PictureWall
           :max-count="maxShowCount"
           :image-list="imageUrlList"
