@@ -61,6 +61,10 @@ const props = withDefaults(defineProps<{
    * 是否并行上传（选中多张图片的情况下）
    */
   parallelUpload?: boolean
+  /**
+   * 选择图片溢出的回调事件
+   */
+  onAfterSelectOverflow?: (fileList: File[]) => void
 }>(), {
   width: 100,
   height: 100,
@@ -76,6 +80,7 @@ const props = withDefaults(defineProps<{
   showDeleteButton: true,
   allowUpload: true,
   parallelUpload: false,
+  onAfterSelectOverflow: () => {},
 })
 
 const slots = defineSlots<{
@@ -195,8 +200,20 @@ async function resolveImageList() {
  * @param fileList
  */
 function handleChangeFile(fileList: File[]) {
+  let resultList = fileList
+  if (props.maxCount !== 0) {
+    // 判断选择的图片是否超过了最大的数量
+    const count = fileList.length + resultImageList.value.length - props.maxCount
+    if (count > 0) {
+      const index = fileList.length - count
+      // 获取到多余的图片
+      const overflowList = fileList.slice(index)
+      props.onAfterSelectOverflow(overflowList)
+      resultList = fileList.slice(0, index)
+    }
+  }
   // 将图片保存到列表中
-  fileList.forEach((file) => {
+  resultList.forEach((file) => {
     resultImageList.value.push({
       url: '',
       file,

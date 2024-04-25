@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useMessage } from '@own-basic-component/util'
 import { PictureWall, UploadPictureWall } from '../../../../packages/naive/src'
 
 const imageUrlList = ref<string[]>([
@@ -22,7 +23,15 @@ const parallelUpload = ref<boolean>(true)
 /**
  * 展示的图片地址列表数据
  */
-const showImagePathJson = computed<string>(() => JSON.stringify(imageUrlList.value, undefined, 2))
+const showImagePathJson = computed<string>(() => JSON.stringify(imageUrlList.value.map(item => item.slice(0, 50)), undefined, 2))
+
+/**
+ * 选择图片溢出事件
+ * @param fileList
+ */
+function handleAfterSelectOverflow(fileList: File[]) {
+  useMessage().error(`你选择的图片数量超出 ${fileList.length} 张`)
+}
 
 /**
  * 图片改变事件
@@ -39,10 +48,14 @@ function handleUploadFile(file: File, uploadedSizeMethod: (size: number) => void
         window.clearInterval(interval)
       i++
     }, 800)
-    setTimeout(() => {
-      uploadedSizeMethod(file.size)
-      resolve('假装这个是图片地址')
-    }, 1000 * uploadTime.value)
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = function () {
+      setTimeout(() => {
+        uploadedSizeMethod(file.size)
+        resolve(reader.result as string)
+      }, 1000 * uploadTime.value)
+    }
   })
 }
 </script>
@@ -105,6 +118,7 @@ function handleUploadFile(file: File, uploadedSizeMethod: (size: number) => void
           :show-edit-button="showEditButton"
           :show-preview-button="showPreviewButton"
           @upload-file="handleUploadFile"
+          @after-select-overflow="handleAfterSelectOverflow"
           @change-image-list="array => imageUrlList = array"
         />
       </NCard>
