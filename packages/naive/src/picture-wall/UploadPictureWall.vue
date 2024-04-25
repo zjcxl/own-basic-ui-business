@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<{
    */
   defaultImageList?: string[]
   /**
-   * 最大的图片数量
+   * 最大的图片数量 0 为不限制
    */
   maxCount?: number
   /**
@@ -42,9 +42,21 @@ const props = withDefaults(defineProps<{
    */
   progress?: boolean
   /**
+   * 是否显示预览
+   */
+  showPreviewButton?: boolean
+  /**
    * 是否显示编辑
    */
-  showEdit?: boolean
+  showEditButton?: boolean
+  /**
+   * 是否显示删除
+   */
+  showDeleteButton?: boolean
+  /**
+   * 是否允许上传
+   */
+  allowUpload?: boolean
 }>(), {
   width: 100,
   height: 100,
@@ -55,7 +67,10 @@ const props = withDefaults(defineProps<{
   objectFit: 'fill',
   onChangeImageList: () => {},
   progress: false,
-  showEdit: true,
+  showPreviewButton: true,
+  showEditButton: true,
+  showDeleteButton: true,
+  allowUpload: true,
 })
 
 const slots = defineSlots<{
@@ -79,9 +94,14 @@ const resultImageList = ref<UploadPictureWallShowModel[]>([])
 
 const imageRefList = ref<InstanceType<typeof NImage>[]>()
 
-const showImageList = computed<UploadPictureWallShowModel[]>(() => resultImageList.value.slice(0, props.maxCount))
+const showImageList = computed<UploadPictureWallShowModel[]>(() => props.maxCount > 0 ? resultImageList.value.slice(0, props.maxCount) : resultImageList.value)
 
-const showUploadButton = computed<boolean>(() => resultImageList.value.length < props.maxCount)
+const showUploadButton = computed<boolean>(() => props.allowUpload && (props.maxCount > 0 ? (resultImageList.value.length < props.maxCount) : true))
+
+/**
+ * 是否展示移入的遮罩
+ */
+const showDonePanel = computed<boolean>(() => props.showPreviewButton || props.showEditButton || props.showDeleteButton)
 
 /**
  * 点击预览
@@ -237,20 +257,22 @@ onMounted(() => {
           </template>
         </NImage>
         <div
-          v-if="item.status === 'done'"
+          v-if="showDonePanel && item.status === 'done'"
           class="z-index-1 absolute left-0 top-0 flex items-center justify-center gap-2 bg-black/50 opacity-0 transition-all-400 group-hover:opacity-100"
           :style="showSize"
         >
           <i
+            v-if="props.showPreviewButton"
             class="i-carbon-view text-1.2em color-white hover:color-red"
             @click="handleClickPreview(index)"
           />
           <i
-            v-if="props.showEdit"
+            v-if="props.showEditButton"
             class="i-carbon-edit text-1.2em color-white hover:color-red"
             @click="handleClickEdit(index)"
           />
           <i
+            v-if="props.showDeleteButton"
             class="i-carbon-trash-can text-1.2em color-white hover:color-red"
             @click="handleClickDelete(index)"
           />
@@ -296,6 +318,7 @@ onMounted(() => {
       </div>
     </BaseFileSelectButton>
     <input
+      v-if="props.showEditButton"
       ref="fileRef"
       :multiple="false"
       accept="image/*"

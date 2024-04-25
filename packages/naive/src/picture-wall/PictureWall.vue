@@ -19,10 +19,15 @@ const props = withDefaults(defineProps<{
    * 图片在容器内的的适应类型
    */
   objectFit?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down'
+  /**
+   * 最大的图片数量 0 为不限制
+   */
+  maxCount?: number
 }>(), {
   width: 100,
   height: 100,
   objectFit: 'fill',
+  maxCount: 0,
 })
 
 const slots = defineSlots<{
@@ -33,13 +38,18 @@ const slots = defineSlots<{
  * 大小样式
  */
 const showSize = computed<string>(() => `width:${props.width}px;height:${props.height}px;`)
+
+/**
+ * 最终展示的图片列表
+ */
+const showImageList = computed<string[]>(() => props.maxCount > 0 ? props.imageList.slice(0, props.maxCount) : props.imageList)
 </script>
 
 <template>
   <div class="flex flex-wrap gap-2">
     <NImageGroup show-toolbar-tooltip>
       <div
-        v-for="(item, index) in imageList"
+        v-for="(item, index) in showImageList"
         :key="`${index}_${item}`"
         class="relative flex cursor-pointer items-center justify-center overflow-hidden border border-rd-1"
         :style="showSize"
