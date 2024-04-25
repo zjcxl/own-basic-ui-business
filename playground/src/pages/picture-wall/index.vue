@@ -14,6 +14,7 @@ const imageUrlList = ref<string[]>([
 
 const uploadTime = ref<number>(3)
 const maxShowCount = ref<number>(9)
+const limitSize = ref<number>(0)
 const useProgress = ref<boolean>(false)
 const showPreviewButton = ref<boolean>(true)
 const showEditButton = ref<boolean>(true)
@@ -34,6 +35,17 @@ const showImagePathJson = computed<string>(() => JSON.stringify(imageUrlList.val
  */
 function handleAfterSelectOverflow(fileList: File[]) {
   useMessage().error(`你选择的图片数量超出 ${fileList.length} 张`)
+}
+
+/**
+ * 图片大小超出事件
+ * @param fileList
+ */
+function handleLimitSizeOverflow(fileList: File[]) {
+  fileList.forEach((file) => {
+    const size = (file.size / 1024).toFixed(2)
+    useMessage().error(`你选择的图片 ${file.name} 大小为 ${size}KB，超出限制大小`)
+  })
 }
 
 /**
@@ -85,6 +97,13 @@ function handleUploadFile(file: File, uploadedSizeMethod: (size: number) => void
             </template>
           </NInputNumber>
         </NFormItem>
+        <NFormItem label="图片上传限制大小">
+          <NInputNumber v-model:value="limitSize" min="0" max="999999">
+            <template #suffix>
+              KB
+            </template>
+          </NInputNumber>
+        </NFormItem>
         <NFormItem label="是否使用进度条">
           <NSwitch v-model:value="useProgress" />
         </NFormItem>
@@ -128,6 +147,8 @@ function handleUploadFile(file: File, uploadedSizeMethod: (size: number) => void
           :show-edit-button="showEditButton"
           :show-preview-button="showPreviewButton"
           :thumbnail-optimize="thumbnailOptimize"
+          :limit-size="limitSize"
+          @limit-size-overflow="handleLimitSizeOverflow"
           @upload-file="handleUploadFile"
           @after-select-overflow="handleAfterSelectOverflow"
           @change-image-list="array => imageUrlList = array"

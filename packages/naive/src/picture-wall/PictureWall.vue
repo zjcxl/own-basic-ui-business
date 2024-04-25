@@ -6,25 +6,21 @@ import { handleThumbnailUrl } from './utils'
 
 const props = withDefaults(defineProps<{
   /**
-   * 默认图片列表
-   */
-  imageList: string[]
-  /**
-   * 宽度 px
-   */
-  width?: number
-  /**
    * 高度 px
    */
   height?: number
   /**
-   * 图片在容器内的的适应类型
+   * 默认图片列表
    */
-  objectFit?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down'
+  imageList: string[]
   /**
    * 最大的图片数量 0 为不限制
    */
   maxCount?: number
+  /**
+   * 图片在容器内的的适应类型
+   */
+  objectFit?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down'
   /**
    * 是否可以预览
    */
@@ -33,13 +29,17 @@ const props = withDefaults(defineProps<{
    * 缩略图显示优化
    */
   thumbnailOptimize?: PictureOptimizeType
+  /**
+   * 宽度 px
+   */
+  width?: number
 }>(), {
-  width: 100,
   height: 100,
-  objectFit: 'fill',
   maxCount: 0,
+  objectFit: 'fill',
   preview: true,
   thumbnailOptimize: 'none',
+  width: 100,
 })
 
 const slots = defineSlots<{

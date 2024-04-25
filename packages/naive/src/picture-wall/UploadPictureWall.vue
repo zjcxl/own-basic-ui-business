@@ -7,17 +7,21 @@ import { handleThumbnailUrl } from './utils'
 
 const props = withDefaults(defineProps<{
   /**
-   * 宽度 px
+   * 是否允许上传
    */
-  width?: number
+  allowUpload?: boolean
+  /**
+   * 默认图片列表
+   */
+  defaultImageList?: string[]
   /**
    * 高度 px
    */
   height?: number
   /**
-   * 默认图片列表
+   * 最大的图片大小（单位KB） 0 为不限制
    */
-  defaultImageList?: string[]
+  limitSize?: number
   /**
    * 最大的图片数量 0 为不限制
    */
@@ -31,62 +35,71 @@ const props = withDefaults(defineProps<{
    */
   objectFit?: 'fill' | 'contain' | 'cover' | 'none' | 'scale-down'
   /**
-   * 选择图片后的回调
+   * 选择图片溢出的回调事件
    */
-  onUploadFile?: (file: File, uploadedSizeMethod: (size: number) => void) => Promise<string>
+  onAfterSelectOverflow?: (fileList: File[]) => void
+  /**
+   * 图片大小超限的事件
+   */
+  onLimitSizeOverflow?: (fileList: File[]) => void
   /**
    * 修改图片数组后的回调
    */
   onChangeImageList?: (urlList: string[]) => void
   /**
-   * 是否显示进入条件
+   * 选择图片后的回调
    */
-  progress?: boolean
-  /**
-   * 是否显示预览
-   */
-  showPreviewButton?: boolean
-  /**
-   * 是否显示编辑
-   */
-  showEditButton?: boolean
-  /**
-   * 是否显示删除
-   */
-  showDeleteButton?: boolean
-  /**
-   * 是否允许上传
-   */
-  allowUpload?: boolean
+  onUploadFile?: (file: File, uploadedSizeMethod: (size: number) => void) => Promise<string>
   /**
    * 是否并行上传（选中多张图片的情况下）
    */
   parallelUpload?: boolean
   /**
-   * 选择图片溢出的回调事件
+   * 是否显示进入条件
    */
-  onAfterSelectOverflow?: (fileList: File[]) => void
+  progress?: boolean
+  /**
+   * 是否显示删除
+   */
+  showDeleteButton?: boolean
+  /**
+   * 是否显示编辑
+   */
+  showEditButton?: boolean
+  /**
+   * 是否显示预览
+   */
+  showPreviewButton?: boolean
   /**
    * 缩略图显示优化
    */
   thumbnailOptimize?: PictureOptimizeType
+  /**
+   * 宽度 px
+   */
+  width?: number
 }>(), {
-  width: 100,
-  height: 100,
+  allowUpload: true,
   defaultImageList: () => ([]),
-  onUploadFile: () => (Promise.resolve('')),
+  height: 100,
+  limitSize: 0,
   maxCount: 1,
   multiple: false,
   objectFit: 'fill',
-  onChangeImageList: () => {},
-  progress: false,
-  showPreviewButton: true,
-  showEditButton: true,
-  showDeleteButton: true,
-  allowUpload: true,
+  onAfterSelectOverflow: () => {
+  },
+  onChangeImageList: () => {
+  },
+  onLimitSizeOverflow: () => {
+  },
+  onUploadFile: () => (Promise.resolve('')),
   parallelUpload: false,
-  onAfterSelectOverflow: () => {},
+  progress: false,
+  showDeleteButton: true,
+  showEditButton: true,
+  showPreviewButton: true,
   thumbnailOptimize: 'none',
+  width: 100,
 })
 
 const slots = defineSlots<{
@@ -176,29 +189,41 @@ function innerUpload(item: UploadPictureWallShowModel): Promise<void> {
   })
 }
 
+let uploading: boolean = false
+
 /**
  * 处理图片
  */
 async function resolveImageList() {
-  const resultList = resultImageList.value.filter(item => !skipStatus.includes(item.status))
-  for (const item of resultList) {
+  if (uploading)
+    return
+  uploading = true
+  do {
+    const resultList = resultImageList.value.filter(item => !skipStatus.includes(item.status))
+    // 获取第一个在等待中的图片
+    const item = resultList.find(item => item.status === 'waiting')
+    if (!item) {
+      uploading = false
+      break
+    }
     if (!item.file) {
       item.status = 'error'
-      continue
-    }
-    const reader = new FileReader()
-    reader.readAsDataURL(item.file)
-    reader.onload = function () {
-      item.dataUrl = reader.result as string
-    }
-    if (props.parallelUpload) {
-      innerUpload(item).then(() => {})
     }
     else {
+      // 将状态设置为上传中
       item.status = 'uploading'
-      await innerUpload(item)
+      // 读取文件的预览信息
+      const reader = new FileReader()
+      reader.readAsDataURL(item.file)
+      reader.onload = function () {
+        item.dataUrl = reader.result as string
+      }
+      if (props.parallelUpload)
+        innerUpload(item).then(() => {})
+      else
+        await innerUpload(item)
     }
-  }
+  } while (true)
 }
 
 /**
@@ -207,15 +232,25 @@ async function resolveImageList() {
  */
 function handleChangeFile(fileList: File[]) {
   let resultList = fileList
+  // 过滤图片的限制大小
+  if (props.limitSize !== 0) {
+    const limitSize = props.limitSize * 1024
+    const array = resultList.filter(file => file.size > limitSize)
+    if (array.length > 0)
+      props.onLimitSizeOverflow(array)
+    resultList = resultList.filter(file => file.size <= limitSize)
+  }
+  if (resultList.length === 0)
+    return
   if (props.maxCount !== 0) {
     // 判断选择的图片是否超过了最大的数量
-    const count = fileList.length + resultImageList.value.length - props.maxCount
+    const count = resultList.length + resultImageList.value.length - props.maxCount
     if (count > 0) {
-      const index = fileList.length - count
+      const index = resultList.length - count
       // 获取到多余的图片
-      const overflowList = fileList.slice(index)
+      const overflowList = resultList.slice(index)
       props.onAfterSelectOverflow(overflowList)
-      resultList = fileList.slice(0, index)
+      resultList = resultList.slice(0, index)
     }
   }
   // 将图片保存到列表中
@@ -223,7 +258,7 @@ function handleChangeFile(fileList: File[]) {
     resultImageList.value.push({
       url: '',
       file,
-      status: props.parallelUpload ? 'uploading' : 'waiting',
+      status: 'waiting',
       size: {
         total: file.size,
         uploaded: 0,
@@ -241,16 +276,22 @@ function handleChangeSelectFile(e: Event) {
   const selectFileList = (e.target as HTMLInputElement).files
   if (selectFileList && selectFileList.length > 0) {
     const file = selectFileList[0]
+    // 过滤图片的限制大小
+    if (props.limitSize !== 0 && file.size > props.limitSize * 1024) {
+      props.onLimitSizeOverflow([file])
+      return
+    }
     resultImageList.value.splice(editIndex.value, 1, {
       url: '',
       file,
-      status: 'uploading',
+      status: 'waiting',
       size: {
         total: file.size,
         uploaded: 0,
       },
     })
     resolveImageList()
+    fileRef.value!.value = ''
   }
 }
 
@@ -288,7 +329,7 @@ onMounted(() => {
           :width="props.width"
           :height="props.height"
           object-fit="contain"
-          :src="item.dataUrl || handleThumbnailUrl(item.url, props.thumbnailOptimize, props.width, props.height)"
+          :src="item.status !== 'done' ? '' : (item.dataUrl || handleThumbnailUrl(item.url, props.thumbnailOptimize, props.width, props.height))"
           :preview-src="item.dataUrl || item.url"
         >
           <template #placeholder>
@@ -300,7 +341,7 @@ onMounted(() => {
               class="flex cursor-pointer items-center justify-center"
               :style="showSize"
             >
-              <i class="i-carbon-i-carbon-image text-2em transition-colors-200 group-hover:text-red" />
+              <i class="i-carbon-image inline-block text-2em text-gray/60 transition-colors-200" />
             </div>
           </template>
         </NImage>
@@ -314,20 +355,11 @@ onMounted(() => {
             class="i-carbon-view text-1.2em color-white hover:color-red"
             @click="handleClickPreview(index)"
           />
-          <template v-if="props.showEditButton">
-            <i
-              class="i-carbon-edit text-1.2em color-white hover:color-red"
-              @click="handleClickEdit(index)"
-            />
-            <input
-              ref="fileRef"
-              :multiple="false"
-              accept="image/*"
-              hidden
-              type="file"
-              @change="handleChangeSelectFile"
-            >
-          </template>
+          <i
+            v-if="props.showEditButton"
+            class="i-carbon-edit text-1.2em color-white hover:color-red"
+            @click="handleClickEdit(index)"
+          />
           <i
             v-if="props.showDeleteButton"
             class="i-carbon-trash-can text-1.2em color-white hover:color-red"
@@ -365,7 +397,7 @@ onMounted(() => {
             :style="showSize"
           >
             <i
-              class="i-carbon-trash-can text-1.2em color-white hover:color-red"
+              class="i-carbon-trash-can text-1.2em color-white opacity-0 transition-all-200 hover:color-red group-hover:opacity-100"
               @click="handleClickDelete(index)"
             />
           </div>
@@ -392,5 +424,14 @@ onMounted(() => {
         <i class="i-carbon-add-large text-2em transition-colors-200 group-hover:text-red" />
       </div>
     </BaseFileSelectButton>
+    <input
+      v-if="props.showEditButton"
+      ref="fileRef"
+      :multiple="false"
+      accept="image/*"
+      hidden
+      type="file"
+      @change="handleChangeSelectFile"
+    >
   </div>
 </template>
