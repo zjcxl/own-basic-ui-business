@@ -41,8 +41,17 @@ export interface UploadPictureWallSizeModel {
 export interface PictureWallShowModel {
 
   /**
-   * 图片地址
+   * 原图地址
    */
-  url: string
+  origin: string
 
+  /**
+   * 缩略图地址
+   */
+  thumbnail: string
 }
+
+/**
+ * 图片优化类型
+ */
+export type PictureOptimizeType = 'none' | 'oss'

@@ -17,6 +17,8 @@ declare module 'vue' {
     NFormItem: typeof import('naive-ui')['NFormItem']
     NInputNumber: typeof import('naive-ui')['NInputNumber']
     NProgress: typeof import('naive-ui')['NProgress']
+    NRadio: typeof import('naive-ui')['NRadio']
+    NRadioGroup: typeof import('naive-ui')['NRadioGroup']
     NSpace: typeof import('naive-ui')['NSpace']
     NSwitch: typeof import('naive-ui')['NSwitch']
     RouterLink: typeof import('vue-router')['RouterLink']

@@ -2,7 +2,8 @@
 import { computed, onMounted, ref } from 'vue'
 import { NImage, NImageGroup, NProgress } from 'naive-ui'
 import { BaseFileSelectButton } from '@own-basic-component/vue'
-import type { UploadPictureWallShowModel } from './types'
+import type { PictureOptimizeType, UploadPictureWallShowModel } from './types'
+import { handleThumbnailUrl } from './utils'
 
 const props = withDefaults(defineProps<{
   /**
@@ -65,6 +66,10 @@ const props = withDefaults(defineProps<{
    * 选择图片溢出的回调事件
    */
   onAfterSelectOverflow?: (fileList: File[]) => void
+  /**
+   * 缩略图显示优化
+   */
+  thumbnailOptimize?: PictureOptimizeType
 }>(), {
   width: 100,
   height: 100,
@@ -81,6 +86,7 @@ const props = withDefaults(defineProps<{
   allowUpload: true,
   parallelUpload: false,
   onAfterSelectOverflow: () => {},
+  thumbnailOptimize: 'none',
 })
 
 const slots = defineSlots<{
@@ -278,10 +284,12 @@ onMounted(() => {
       >
         <NImage
           ref="imageRefList"
+          :preview-disabled="!props.showPreviewButton"
           :width="props.width"
           :height="props.height"
           object-fit="contain"
-          :src="item.dataUrl || item.url"
+          :src="item.dataUrl || handleThumbnailUrl(item.url, props.thumbnailOptimize, props.width, props.height)"
+          :preview-src="item.dataUrl || item.url"
         >
           <template #placeholder>
             <template v-if="slots.placeholder">
@@ -306,11 +314,20 @@ onMounted(() => {
             class="i-carbon-view text-1.2em color-white hover:color-red"
             @click="handleClickPreview(index)"
           />
-          <i
-            v-if="props.showEditButton"
-            class="i-carbon-edit text-1.2em color-white hover:color-red"
-            @click="handleClickEdit(index)"
-          />
+          <template v-if="props.showEditButton">
+            <i
+              class="i-carbon-edit text-1.2em color-white hover:color-red"
+              @click="handleClickEdit(index)"
+            />
+            <input
+              ref="fileRef"
+              :multiple="false"
+              accept="image/*"
+              hidden
+              type="file"
+              @change="handleChangeSelectFile"
+            >
+          </template>
           <i
             v-if="props.showDeleteButton"
             class="i-carbon-trash-can text-1.2em color-white hover:color-red"
@@ -375,14 +392,5 @@ onMounted(() => {
         <i class="i-carbon-add-large text-2em transition-colors-200 group-hover:text-red" />
       </div>
     </BaseFileSelectButton>
-    <input
-      v-if="props.showEditButton"
-      ref="fileRef"
-      :multiple="false"
-      accept="image/*"
-      hidden
-      type="file"
-      @change="handleChangeSelectFile"
-    >
   </div>
 </template>

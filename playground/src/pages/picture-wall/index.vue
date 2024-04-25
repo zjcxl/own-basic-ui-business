@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useMessage } from '@own-basic-component/util'
+import type { PictureOptimizeType } from '../../../../packages/naive/src'
 import { PictureWall, UploadPictureWall } from '../../../../packages/naive/src'
 
 const imageUrlList = ref<string[]>([
@@ -8,6 +9,7 @@ const imageUrlList = ref<string[]>([
   'https://picsum.photos/500/500?random=3',
   'https://picsum.photos/500/500?random=4',
   'https://picsum.photos/500/500?random=5',
+  'https://test-bbg.oss-cn-beijing.aliyuncs.com/2024/04/25/0ea568f1ca73475f8906fa1080a6d463.jpg',
 ])
 
 const uploadTime = ref<number>(3)
@@ -19,6 +21,7 @@ const showDeleteButton = ref<boolean>(true)
 const allowUpload = ref<boolean>(true)
 const multiple = ref<boolean>(true)
 const parallelUpload = ref<boolean>(true)
+const thumbnailOptimize = ref<PictureOptimizeType>('none')
 
 /**
  * 展示的图片地址列表数据
@@ -103,6 +106,13 @@ function handleUploadFile(file: File, uploadedSizeMethod: (size: number) => void
         <NFormItem label="是否允许并行上传">
           <NSwitch v-model:value="parallelUpload" />
         </NFormItem>
+        <NFormItem label="是否优化缩略图">
+          <n-radio-group v-model:value="thumbnailOptimize" name="thumbnailOptimize">
+            <n-space>
+              <n-radio v-for="item in ['none', 'oss']" :key="item" :value="item" :label="item" />
+            </n-space>
+          </n-radio-group>
+        </NFormItem>
       </NForm>
     </div>
     <div class="grid grid-cols-2 w-100% gap-2">
@@ -117,6 +127,7 @@ function handleUploadFile(file: File, uploadedSizeMethod: (size: number) => void
           :show-delete-button="showDeleteButton"
           :show-edit-button="showEditButton"
           :show-preview-button="showPreviewButton"
+          :thumbnail-optimize="thumbnailOptimize"
           @upload-file="handleUploadFile"
           @after-select-overflow="handleAfterSelectOverflow"
           @change-image-list="array => imageUrlList = array"
@@ -124,8 +135,9 @@ function handleUploadFile(file: File, uploadedSizeMethod: (size: number) => void
       </NCard>
       <NCard title="展示">
         <PictureWall
-          :max-count="maxShowCount"
           :image-list="imageUrlList"
+          :max-count="maxShowCount"
+          :thumbnail-optimize="thumbnailOptimize"
         />
       </NCard>
       <NCard title="图片地址列表" class="overflow-hidden">

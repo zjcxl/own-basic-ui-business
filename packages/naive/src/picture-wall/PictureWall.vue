@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { NImage, NImageGroup } from 'naive-ui'
+import type { PictureOptimizeType, PictureWallShowModel } from './types'
+import { handleThumbnailUrl } from './utils'
 
 const props = withDefaults(defineProps<{
   /**
@@ -23,11 +25,21 @@ const props = withDefaults(defineProps<{
    * 最大的图片数量 0 为不限制
    */
   maxCount?: number
+  /**
+   * 是否可以预览
+   */
+  preview?: boolean
+  /**
+   * 缩略图显示优化
+   */
+  thumbnailOptimize?: PictureOptimizeType
 }>(), {
   width: 100,
   height: 100,
   objectFit: 'fill',
   maxCount: 0,
+  preview: true,
+  thumbnailOptimize: 'none',
 })
 
 const slots = defineSlots<{
@@ -42,7 +54,14 @@ const showSize = computed<string>(() => `width:${props.width}px;height:${props.h
 /**
  * 最终展示的图片列表
  */
-const showImageList = computed<string[]>(() => props.maxCount > 0 ? props.imageList.slice(0, props.maxCount) : props.imageList)
+const showImageList = computed<PictureWallShowModel[]>(() => {
+  return (props.maxCount > 0 ? props.imageList.slice(0, props.maxCount) : props.imageList).map((url) => {
+    return {
+      origin: url,
+      thumbnail: handleThumbnailUrl(url, props.thumbnailOptimize, props.width, props.height),
+    }
+  })
+})
 </script>
 
 <template>
@@ -51,14 +70,16 @@ const showImageList = computed<string[]>(() => props.maxCount > 0 ? props.imageL
       <div
         v-for="(item, index) in showImageList"
         :key="`${index}_${item}`"
-        class="relative flex cursor-pointer items-center justify-center overflow-hidden border border-rd-1"
         :style="showSize"
+        class="relative flex cursor-pointer items-center justify-center overflow-hidden border border-rd-1"
       >
         <NImage
-          :width="props.width"
           :height="props.height"
+          :preview-disabled="!props.preview"
+          :src="item.thumbnail"
+          :preview-src="item.origin"
+          :width="props.width"
           object-fit="contain"
-          :src="item"
         >
           <template #placeholder>
             <template v-if="slots.placeholder">
