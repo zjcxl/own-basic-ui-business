@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { NImage, NImageGroup, NProgress } from 'naive-ui'
 import { BaseFileSelectButton } from '@own-basic-component/vue'
+import { useMessage } from '@own-basic-component/util'
 import type { PictureOptimizeType, UploadPictureWallShowModel } from './types'
 import { handleThumbnailUrl } from './utils'
 
@@ -86,11 +87,17 @@ const props = withDefaults(defineProps<{
   maxCount: 1,
   multiple: false,
   objectFit: 'fill',
-  onAfterSelectOverflow: () => {
+  onAfterSelectOverflow: (fileList: File[]) => {
+    useMessage().error(`你选择的图片数量超出 ${fileList.length} 张`)
   },
   onChangeImageList: () => {
   },
-  onLimitSizeOverflow: () => {
+  onLimitSizeOverflow: (fileList: File[]) => {
+    const limit = (props.limitSize / 1024).toFixed(2)
+    fileList.forEach((file) => {
+      const size = (file.size / 1024).toFixed(2)
+      useMessage().error(`你选择的图片 ${file.name} 大小为 ${size}KB，超出限制大小 ${limit}KB`)
+    })
   },
   onUploadFile: () => (Promise.resolve('')),
   parallelUpload: false,
