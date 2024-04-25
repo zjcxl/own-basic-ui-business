@@ -124,7 +124,6 @@ defineExpose({
         v-buried
         tag="a"
         text
-        quaternary
         type="success"
         @click="visibleMinorList = !visibleMinorList"
       >
