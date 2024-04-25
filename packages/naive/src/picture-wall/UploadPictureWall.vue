@@ -41,6 +41,10 @@ const props = withDefaults(defineProps<{
    * 是否显示进入条件
    */
   progress?: boolean
+  /**
+   * 是否显示编辑
+   */
+  showEdit?: boolean
 }>(), {
   width: 100,
   height: 100,
@@ -51,11 +55,17 @@ const props = withDefaults(defineProps<{
   objectFit: 'fill',
   onChangeImageList: () => {},
   progress: false,
+  showEdit: true,
 })
 
 const slots = defineSlots<{
   placeholder?: []
 }>()
+
+/**
+ * 文件选择器
+ */
+const fileRef = ref<HTMLInputElement>()
 
 /**
  * 大小样式
@@ -88,6 +98,20 @@ function handleClickPreview(index: number) {
 function handleClickDelete(index: number) {
   resultImageList.value.splice(index, 1)
   props.onChangeImageList(getImageUrlList())
+}
+
+/**
+ * 编辑信息的索引
+ */
+const editIndex = ref<number>(-1)
+
+/**
+ * 点击编辑
+ * @param index
+ */
+function handleClickEdit(index: number) {
+  fileRef.value?.click()
+  editIndex.value = index
 }
 
 /**
@@ -141,6 +165,27 @@ function handleChangeFile(fileList: File[]) {
     })
   })
   resolveImageList()
+}
+
+/**
+ * 获取文件事件
+ * @param e 事件
+ */
+function handleChangeSelectFile(e: Event) {
+  const selectFileList = (e.target as HTMLInputElement).files
+  if (selectFileList && selectFileList.length > 0) {
+    const file = selectFileList[0]
+    resultImageList.value.splice(editIndex.value, 1, {
+      url: '',
+      file,
+      status: 'uploading',
+      size: {
+        total: file.size,
+        uploaded: 0,
+      },
+    })
+    resolveImageList()
+  }
 }
 
 /**
@@ -201,6 +246,11 @@ onMounted(() => {
             @click="handleClickPreview(index)"
           />
           <i
+            v-if="props.showEdit"
+            class="i-carbon-edit text-1.2em color-white hover:color-red"
+            @click="handleClickEdit(index)"
+          />
+          <i
             class="i-carbon-trash-can text-1.2em color-white hover:color-red"
             @click="handleClickDelete(index)"
           />
@@ -245,5 +295,13 @@ onMounted(() => {
         <i class="i-carbon-add-large text-2em transition-colors-200 group-hover:text-red" />
       </div>
     </BaseFileSelectButton>
+    <input
+      ref="fileRef"
+      :multiple="false"
+      accept="image/*"
+      hidden
+      type="file"
+      @change="handleChangeSelectFile"
+    >
   </div>
 </template>
