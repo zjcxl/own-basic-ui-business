@@ -87,6 +87,7 @@ function handleClickPreview(index: number) {
  */
 function handleClickDelete(index: number) {
   resultImageList.value.splice(index, 1)
+  props.onChangeImageList(getImageUrlList())
 }
 
 /**
@@ -162,7 +163,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex gap-2">
+  <div class="flex flex-wrap gap-2">
     <NImageGroup show-toolbar-tooltip>
       <div
         v-for="(item, index) in showImageList"

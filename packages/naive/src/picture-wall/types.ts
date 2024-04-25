@@ -33,3 +33,12 @@ export interface UploadPictureWallSizeModel {
    */
   uploaded: number
 }
+
+export interface PictureWallShowModel {
+
+  /**
+   * 图片地址
+   */
+  url: string
+
+}

@@ -12,8 +12,13 @@ declare module 'vue' {
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
     NCode: typeof import('naive-ui')['NCode']
+    NDivider: typeof import('naive-ui')['NDivider']
+    NForm: typeof import('naive-ui')['NForm']
+    NFormItem: typeof import('naive-ui')['NFormItem']
+    NInputNumber: typeof import('naive-ui')['NInputNumber']
     NProgress: typeof import('naive-ui')['NProgress']
     NSpace: typeof import('naive-ui')['NSpace']
+    NSwitch: typeof import('naive-ui')['NSwitch']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
