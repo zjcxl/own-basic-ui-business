@@ -51,14 +51,17 @@ function handleLimitSizeOverflow(fileList: File[]) {
 /**
  * 图片改变事件
  * @param file
- * @param uploadedSizeMethod
+ * @param onUploadProgress
  */
-function handleUploadFile(file: File, uploadedSizeMethod: (size: number) => void): Promise<string> {
+function handleUploadFile(file: File, onUploadProgress: (event: Partial<ProgressEvent>) => void): Promise<string> {
   return new Promise((resolve) => {
     // 模拟上传（设置成10份）
     let i = 0
     const interval = setInterval(() => {
-      uploadedSizeMethod(file.size / uploadTime.value * i)
+      onUploadProgress({
+        loaded: file.size / uploadTime.value * i,
+        total: file.size,
+      })
       if (i >= uploadTime.value)
         window.clearInterval(interval)
       i++
@@ -67,7 +70,10 @@ function handleUploadFile(file: File, uploadedSizeMethod: (size: number) => void
     reader.readAsDataURL(file)
     reader.onload = function () {
       setTimeout(() => {
-        uploadedSizeMethod(file.size)
+        onUploadProgress({
+          loaded: file.size,
+          total: file.size,
+        })
         resolve(reader.result as string)
       }, 1000 * uploadTime.value)
     }

@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<{
   /**
    * 选择图片后的回调
    */
-  onUploadFile?: (file: File, uploadedSizeMethod: (size: number) => void) => Promise<string>
+  onUploadFile?: (file: File, onUploadProgress: (event: Partial<ProgressEvent>) => void) => Promise<string>
   /**
    * 是否并行上传（选中多张图片的情况下）
    */
@@ -181,9 +181,11 @@ const skipStatus = ['done', 'error']
 function innerUpload(item: UploadPictureWallShowModel): Promise<void> {
   return new Promise((resolve) => {
   // 执行上传文件
-    props.onUploadFile(item.file!, (size) => {
-      if (item.size)
-        item.size.uploaded = size
+    props.onUploadFile(item.file!, (event) => {
+      if (item.size && event.loaded && event.total) {
+        item.size.uploaded = event.loaded
+        item.size.total = event.total
+      }
     }).then((url) => {
       if (url)
         item.url = url
