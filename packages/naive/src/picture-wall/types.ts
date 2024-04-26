@@ -19,7 +19,7 @@ export interface UploadPictureWallShowModel {
    * error - 错误
    * waiting - 等待中
    */
-  status: 'done' | 'uploading' | 'error' | 'waiting'
+  status: 'done' | 'uploading' | 'error' | 'waiting' | 'resolving'
   /**
    * 大小信息
    */

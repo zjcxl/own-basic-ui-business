@@ -185,6 +185,8 @@ function innerUpload(item: UploadPictureWallShowModel): Promise<void> {
       if (item.size && event.loaded && event.total) {
         item.size.uploaded = event.loaded
         item.size.total = event.total
+        if (event.loaded >= event.total)
+          item.status = 'resolving'
       }
     }).then((url) => {
       if (url)
@@ -374,7 +376,7 @@ onMounted(() => {
             @click="handleClickDelete(index)"
           />
         </div>
-        <template v-if="item.status === 'uploading'">
+        <template v-if="item.status === 'uploading' || item.status === 'resolving'">
           <div
             class="z-index-1 absolute left-0 top-0 flex flex-col items-center justify-center gap-2 bg-black/50 opacity-100 transition-all-400"
             :style="showSize"
@@ -387,13 +389,19 @@ onMounted(() => {
           <div
             class="z-index-2 absolute bottom-0 left-0 h-20px w-100% flex items-center justify-center bg-white/50"
           >
-            <NProgress
-              v-if="props.progress"
-              type="line"
-              :show-indicator="false"
-              status="info"
-              :percentage="(item.size?.uploaded || 0) / (item.size?.total || 1) * 100"
-            />
+            <template v-if="props.progress">
+              <NProgress
+                v-if="item.status === 'uploading'"
+                type="line"
+                :show-indicator="false"
+                status="info"
+                :percentage="(item.size?.uploaded || 0) / (item.size?.total || 1) * 100"
+              />
+              <div v-else>
+                处理中...
+              </div>
+            </template>
+
             <div v-else>
               上传中...
             </div>
