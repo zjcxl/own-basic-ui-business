@@ -40,13 +40,13 @@ const props = withDefaults(defineProps<{
    */
   onAfterSelectOverflow?: (fileList: File[]) => void
   /**
-   * 图片大小超限的事件
-   */
-  onLimitSizeOverflow?: (fileList: File[]) => void
-  /**
    * 修改图片数组后的回调
    */
   onChangeImageList?: (urlList: string[]) => void
+  /**
+   * 图片大小超限的事件
+   */
+  onLimitSizeOverflow?: (fileList: File[]) => void
   /**
    * 选择图片后的回调
    */
@@ -71,6 +71,18 @@ const props = withDefaults(defineProps<{
    * 是否显示预览
    */
   showPreviewButton?: boolean
+  /**
+   * 处理中的文字描述
+   */
+  textResolving?: string
+  /**
+   * 上传中的文字描述
+   */
+  textUploading?: string
+  /**
+   * 等待中的文字描述
+   */
+  textWaiting?: string
   /**
    * 缩略图显示优化
    */
@@ -104,6 +116,9 @@ const props = withDefaults(defineProps<{
   showDeleteButton: true,
   showEditButton: true,
   showPreviewButton: true,
+  textResolving: '处理中...',
+  textUploading: '上传中...',
+  textWaiting: '等待中...',
   thumbnailOptimize: 'none',
   width: 100,
 })
@@ -172,7 +187,7 @@ function handleClickEdit(index: number) {
 /**
  * 跳过解析的图片状态
  */
-const skipStatus = ['done', 'error']
+const skipStatus = ['done', 'error', 'resolving', 'uploading']
 
 /**
  * 处理文件的方法
@@ -185,7 +200,7 @@ function innerUpload(item: UploadPictureWallShowModel): Promise<void> {
       if (item.size && event.loaded && event.total) {
         item.size.uploaded = event.loaded
         item.size.total = event.total
-        if (event.loaded >= event.total)
+        if (event.loaded >= event.total && item.status !== 'done')
           item.status = 'resolving'
       }
     }).then((url) => {
@@ -312,8 +327,17 @@ function getImageUrlList(): string[] {
   return resultImageList.value.filter(item => item.status === 'done').map(item => item.url).filter(item => item.length > 0)
 }
 
+/**
+ * 清空列表
+ */
+function clearList() {
+  resultImageList.value = []
+  uploading = false
+}
+
 defineExpose({
   getImageUrlList,
+  clearList,
 })
 
 onMounted(() => {
@@ -339,7 +363,7 @@ onMounted(() => {
           :width="props.width"
           :height="props.height"
           object-fit="contain"
-          :src="item.status !== 'done' ? '' : (item.dataUrl || handleThumbnailUrl(item.url, props.thumbnailOptimize, props.width, props.height))"
+          :src="['done', 'uploading', 'resolving'].includes(item.status) ? (item.dataUrl || handleThumbnailUrl(item.url, props.thumbnailOptimize, props.width, props.height)) : ''"
           :preview-src="item.dataUrl || item.url"
         >
           <template #placeholder>
@@ -397,13 +421,12 @@ onMounted(() => {
                 status="info"
                 :percentage="(item.size?.uploaded || 0) / (item.size?.total || 1) * 100"
               />
-              <div v-else>
-                处理中...
+              <div v-if="item.status === 'resolving'" class="text-0.8em">
+                {{ props.textResolving }}
               </div>
             </template>
-
-            <div v-else>
-              上传中...
+            <div v-else class="text-0.8em">
+              {{ props.textUploading }}
             </div>
           </div>
         </template>
@@ -420,8 +443,8 @@ onMounted(() => {
           <div
             class="z-index-2 absolute bottom-0 left-0 h-20px w-100% flex items-center justify-center bg-white/50"
           >
-            <div>
-              等待中...
+            <div class="text-0.8em">
+              {{ props.textWaiting }}
             </div>
           </div>
         </template>

@@ -6,14 +6,10 @@ import { PictureWall, UploadPictureWall } from '../../../../packages/naive/src'
 const imageUrlList = ref<string[]>([
   'https://picsum.photos/500/500?random=1',
   'https://picsum.photos/500/500?random=2',
-  'https://picsum.photos/500/500?random=3',
-  'https://picsum.photos/500/500?random=4',
-  'https://picsum.photos/500/500?random=5',
-  'https://test-bbg.oss-cn-beijing.aliyuncs.com/2024/04/25/0ea568f1ca73475f8906fa1080a6d463.jpg',
 ])
 
 const uploadTime = ref<number>(3)
-const maxShowCount = ref<number>(9)
+const maxShowCount = ref<number>(0)
 const limitSize = ref<number>(0)
 const useProgress = ref<boolean>(false)
 const showPreviewButton = ref<boolean>(true)
@@ -21,13 +17,13 @@ const showEditButton = ref<boolean>(true)
 const showDeleteButton = ref<boolean>(true)
 const allowUpload = ref<boolean>(true)
 const multiple = ref<boolean>(true)
-const parallelUpload = ref<boolean>(true)
+const parallelUpload = ref<boolean>(false)
 const thumbnailOptimize = ref<PictureOptimizeType>('none')
 
 /**
  * 展示的图片地址列表数据
  */
-const showImagePathJson = computed<string>(() => JSON.stringify(imageUrlList.value.map(item => item.slice(0, 50)), undefined, 2))
+const showImagePathJson = computed<string>(() => JSON.stringify(imageUrlList.value, undefined, 2))
 
 /**
  * 选择图片溢出事件
@@ -48,6 +44,17 @@ function handleLimitSizeOverflow(fileList: File[]) {
   })
 }
 
+const uploadPictureWallRef = ref<InstanceType<typeof UploadPictureWall>>()
+
+function clearList() {
+  imageUrlList.value.forEach((item) => {
+    if (item.startsWith('blob:'))
+      window.URL.revokeObjectURL(item)
+  })
+  imageUrlList.value = []
+  uploadPictureWallRef.value?.clearList()
+}
+
 /**
  * 图片改变事件
  * @param file
@@ -66,17 +73,9 @@ function handleUploadFile(file: File, onUploadProgress: (event: Partial<Progress
         window.clearInterval(interval)
       i++
     }, 800)
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = function () {
-      setTimeout(() => {
-        onUploadProgress({
-          loaded: file.size,
-          total: file.size,
-        })
-        resolve(reader.result as string)
-      }, 1000 * uploadTime.value)
-    }
+    setTimeout(() => {
+      resolve(window.URL.createObjectURL(file))
+    }, 1000 * uploadTime.value)
   })
 }
 </script>
@@ -89,6 +88,11 @@ function handleUploadFile(file: File, onUploadProgress: (event: Partial<Progress
         label-width="auto"
         label-align="left"
       >
+        <NFormItem>
+          <NButton type="primary" @click="clearList">
+            清空列表
+          </NButton>
+        </NFormItem>
         <NFormItem label="模拟上传的时间大小">
           <NInputNumber v-model:value="uploadTime" min="1" max="999">
             <template #suffix>
@@ -143,6 +147,7 @@ function handleUploadFile(file: File, onUploadProgress: (event: Partial<Progress
     <div class="grid grid-cols-2 w-100% gap-2">
       <NCard title="上传">
         <UploadPictureWall
+          ref="uploadPictureWallRef"
           :allow-upload="allowUpload"
           :default-image-list="imageUrlList"
           :max-count="maxShowCount"
