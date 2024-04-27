@@ -238,11 +238,7 @@ async function resolveImageList() {
       // 将状态设置为上传中
       item.status = 'uploading'
       // 读取文件的预览信息
-      const reader = new FileReader()
-      reader.readAsDataURL(item.file)
-      reader.onload = function () {
-        item.dataUrl = reader.result as string
-      }
+      item.dataUrl = window.URL.createObjectURL(item.file)
       if (props.parallelUpload)
         innerUpload(item).then(() => {})
       else
