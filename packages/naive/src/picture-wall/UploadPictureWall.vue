@@ -4,7 +4,7 @@ import { NImage, NImageGroup, NProgress } from 'naive-ui'
 import { BaseFileSelectButton } from '@own-basic-component/vue'
 import { useMessage } from '@own-basic-component/util'
 import type { PictureOptimizeType, UploadPictureWallShowModel } from './types'
-import { handleThumbnailUrl } from './utils'
+import { createUploadPictureWallItem, handleThumbnailUrl } from './utils'
 
 const props = withDefaults(defineProps<{
   /**
@@ -166,8 +166,14 @@ function handleClickPreview(index: number) {
  * @param index
  */
 function handleClickDelete(index: number) {
+  // 获取对应的信息
+  const item = resultImageList.value[index]
   resultImageList.value.splice(index, 1)
   props.onChangeImageList(getImageUrlList())
+  if (!props.parallelUpload && item.status === 'uploading') {
+    // 如果是并行上传的情况下，需要重新解析图片
+    resolveImageList()
+  }
 }
 
 /**
@@ -237,8 +243,6 @@ async function resolveImageList() {
     else {
       // 将状态设置为上传中
       item.status = 'uploading'
-      // 读取文件的预览信息
-      item.dataUrl = window.URL.createObjectURL(item.file)
       if (props.parallelUpload)
         innerUpload(item).then(() => {})
       else
@@ -276,15 +280,7 @@ function handleChangeFile(fileList: File[]) {
   }
   // 将图片保存到列表中
   resultList.forEach((file) => {
-    resultImageList.value.push({
-      url: '',
-      file,
-      status: 'waiting',
-      size: {
-        total: file.size,
-        uploaded: 0,
-      },
-    })
+    resultImageList.value.push(createUploadPictureWallItem(file))
   })
   resolveImageList()
 }
@@ -302,15 +298,7 @@ function handleChangeSelectFile(e: Event) {
       props.onLimitSizeOverflow([file])
       return
     }
-    resultImageList.value.splice(editIndex.value, 1, {
-      url: '',
-      file,
-      status: 'waiting',
-      size: {
-        total: file.size,
-        uploaded: 0,
-      },
-    })
+    resultImageList.value.splice(editIndex.value, 1, createUploadPictureWallItem(file))
     resolveImageList()
     fileRef.value!.value = ''
   }
@@ -359,7 +347,7 @@ onMounted(() => {
           :width="props.width"
           :height="props.height"
           object-fit="contain"
-          :src="['done', 'uploading', 'resolving'].includes(item.status) ? (item.dataUrl || handleThumbnailUrl(item.url, props.thumbnailOptimize, props.width, props.height)) : ''"
+          :src="['done', 'uploading', 'resolving', 'waiting'].includes(item.status) ? (item.dataUrl || handleThumbnailUrl(item.url, props.thumbnailOptimize, props.width, props.height)) : ''"
           :preview-src="item.dataUrl || item.url"
         >
           <template #placeholder>
