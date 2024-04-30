@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue'
 import { NImage, NImageGroup, NProgress } from 'naive-ui'
 import { BaseFileSelectButton } from '@own-basic-component/vue'
 import { useMessage } from '@own-basic-component/util'
@@ -91,6 +91,15 @@ const props = withDefaults(defineProps<{
    * 宽度 px
    */
   width?: number
+  /**
+   * 是否需要使用copper裁剪图片
+   */
+  useCopper?: boolean
+  /**
+   * copper截图框的宽高比例
+   * @default [1, 1]
+   */
+  copperOptionsFixedNumber?: [number, number]
 }>(), {
   allowUpload: true,
   defaultImageList: () => ([]),
@@ -121,11 +130,17 @@ const props = withDefaults(defineProps<{
   textWaiting: '等待中...',
   thumbnailOptimize: 'none',
   width: 100,
+  useCopper: false,
 })
 
 const slots = defineSlots<{
   placeholder?: []
 }>()
+
+/**
+ * 自定义的图片组件
+ */
+const CustomCropper = defineAsyncComponent(() => import('./CustomCropper.vue'))
 
 /**
  * 文件选择器
@@ -152,6 +167,19 @@ const showUploadButton = computed<boolean>(() => props.allowUpload && (props.max
  * 是否展示移入的遮罩
  */
 const showDonePanel = computed<boolean>(() => props.showPreviewButton || props.showEditButton || props.showDeleteButton)
+
+/**
+ * 图片裁剪的modal
+ */
+const copperModal = reactive<{
+  visible: boolean
+  src: string
+  index: number
+}>({
+  visible: false,
+  src: '',
+  index: -1,
+})
 
 /**
  * 点击预览
@@ -201,7 +229,7 @@ const skipStatus = ['done', 'error', 'resolving', 'uploading']
  */
 function innerUpload(item: UploadPictureWallShowModel): Promise<void> {
   return new Promise((resolve) => {
-  // 执行上传文件
+    // 执行上传文件
     props.onUploadFile(item.file!, (event) => {
       if (item.size && event.loaded && event.total) {
         item.size.uploaded = event.loaded
@@ -252,6 +280,23 @@ async function resolveImageList() {
 }
 
 /**
+ * 裁剪图片处理
+ */
+function resolveCopperImageList() {
+  // 获取第一张等待裁剪的图片
+  const index = resultImageList.value.findIndex(item => item.status === 'waiting-copper')
+  const item = resultImageList.value[index]
+  if (!item) {
+    resolveImageList()
+    return
+  }
+  item.status = 'coppering'
+  copperModal.index = index
+  copperModal.src = item.dataUrl!
+  copperModal.visible = true
+}
+
+/**
  * 修改文件事件
  * @param fileList
  */
@@ -278,11 +323,20 @@ function handleChangeFile(fileList: File[]) {
       resultList = resultList.slice(0, index)
     }
   }
-  // 将图片保存到列表中
-  resultList.forEach((file) => {
-    resultImageList.value.push(createUploadPictureWallItem(file))
-  })
-  resolveImageList()
+  // 判断是否需要使用copper
+  if (props.useCopper) {
+    resultList.forEach((file) => {
+      resultImageList.value.push(createUploadPictureWallItem(file, 'waiting-copper'))
+    })
+    resolveCopperImageList()
+  }
+  else {
+    // 将图片保存到列表中
+    resultList.forEach((file) => {
+      resultImageList.value.push(createUploadPictureWallItem(file))
+    })
+    resolveImageList()
+  }
 }
 
 /**
@@ -298,10 +352,51 @@ function handleChangeSelectFile(e: Event) {
       props.onLimitSizeOverflow([file])
       return
     }
-    resultImageList.value.splice(editIndex.value, 1, createUploadPictureWallItem(file))
-    resolveImageList()
+    // 判断是否需要使用copper
+    if (props.useCopper) {
+      resultImageList.value.splice(editIndex.value, 1, createUploadPictureWallItem(file, 'waiting-copper'))
+      resolveCopperImageList()
+    }
+    else {
+      resultImageList.value.splice(editIndex.value, 1, createUploadPictureWallItem(file))
+      resolveImageList()
+    }
     fileRef.value!.value = ''
   }
+}
+
+/**
+ * 处理裁剪信息的保存
+ * @param src
+ * @param file
+ */
+function handleSaveCopper(src: string, file: File) {
+  // 获取
+  const item = resultImageList.value[copperModal.index]
+  if (item) {
+    item.dataUrl = src
+    item.file = file
+    item.status = 'waiting'
+  }
+  copperModal.index = -1
+  copperModal.src = ''
+  copperModal.visible = false
+  // 再次处理
+  resolveCopperImageList()
+}
+
+/**
+ * 处理裁剪信息的取消
+ */
+function handleCancelCopper() {
+  // 删除信息
+  handleClickDelete(copperModal.index)
+  // 初始化
+  copperModal.index = -1
+  copperModal.src = ''
+  copperModal.visible = false
+  // 再次处理
+  resolveCopperImageList()
 }
 
 /**
@@ -432,6 +527,32 @@ onMounted(() => {
             </div>
           </div>
         </template>
+        <template v-if="item.status === 'coppering'">
+          <div
+            class="z-index-1 absolute left-0 top-0 flex flex-col items-center justify-center gap-2 bg-black/50 opacity-100 transition-all-400"
+            :style="showSize"
+          />
+          <div
+            class="z-index-2 absolute bottom-0 left-0 h-20px w-100% flex items-center justify-center bg-white/50"
+          >
+            <div class="text-0.8em">
+              裁剪中...
+            </div>
+          </div>
+        </template>
+        <template v-if="item.status === 'waiting-copper'">
+          <div
+            class="z-index-1 absolute left-0 top-0 flex flex-col items-center justify-center gap-2 bg-black/50 opacity-100 transition-all-400"
+            :style="showSize"
+          />
+          <div
+            class="z-index-2 absolute bottom-0 left-0 h-20px w-100% flex items-center justify-center bg-white/50"
+          >
+            <div class="text-0.8em">
+              等待裁剪中...
+            </div>
+          </div>
+        </template>
       </div>
     </NImageGroup>
     <BaseFileSelectButton
@@ -456,5 +577,22 @@ onMounted(() => {
       type="file"
       @change="handleChangeSelectFile"
     >
+    <n-modal v-model:show="copperModal.visible">
+      <n-card
+        class="h-80vh w-80%"
+        title="裁剪图片"
+        size="huge"
+        :bordered="false"
+        role="dialog"
+        aria-modal="true"
+      >
+        <CustomCropper
+          :fixed-number="props.copperOptionsFixedNumber"
+          :src="copperModal.src"
+          @save="handleSaveCopper"
+          @cancel="handleCancelCopper"
+        />
+      </n-card>
+    </n-modal>
   </div>
 </template>

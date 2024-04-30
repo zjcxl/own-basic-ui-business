@@ -8,7 +8,7 @@ hljs.registerLanguage('json', json)
 
 <template>
   <NConfigProvider :date-locale="dateZhCN" :hljs="hljs" :locale="zhCN">
-    <div class="p4">
+    <div class="h-100vh p4">
       <router-view />
     </div>
   </NConfigProvider>

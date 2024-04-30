@@ -18,6 +18,7 @@ const showDeleteButton = ref<boolean>(true)
 const allowUpload = ref<boolean>(true)
 const multiple = ref<boolean>(true)
 const parallelUpload = ref<boolean>(false)
+const useCopper = ref<boolean>(true)
 const thumbnailOptimize = ref<PictureOptimizeType>('none')
 
 /**
@@ -81,8 +82,8 @@ function handleUploadFile(file: File, onUploadProgress: (event: Partial<Progress
 </script>
 
 <template>
-  <div class="flex">
-    <div class="w-250px flex-[0_0_auto] p3">
+  <div class="h-100% flex overflow-hidden">
+    <div class="w-250px flex-[0_0_auto] overflow-y-auto p3">
       <NForm
         label-placement="top"
         label-width="auto"
@@ -142,6 +143,9 @@ function handleUploadFile(file: File, onUploadProgress: (event: Partial<Progress
             </n-space>
           </n-radio-group>
         </NFormItem>
+        <NFormItem label="是否需要进行裁剪">
+          <NSwitch v-model:value="useCopper" />
+        </NFormItem>
       </NForm>
     </div>
     <div class="grid grid-cols-2 w-100% gap-2">
@@ -159,6 +163,8 @@ function handleUploadFile(file: File, onUploadProgress: (event: Partial<Progress
           :show-preview-button="showPreviewButton"
           :thumbnail-optimize="thumbnailOptimize"
           :limit-size="limitSize"
+          :use-copper="useCopper"
+          :copper-options-fixed-number="[2, 3]"
           @limit-size-overflow="handleLimitSizeOverflow"
           @upload-file="handleUploadFile"
           @after-select-overflow="handleAfterSelectOverflow"

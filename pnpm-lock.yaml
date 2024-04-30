@@ -140,6 +140,9 @@ importers:
       vue:
         specifier: ^3.4.26
         version: 3.4.26(typescript@5.4.5)
+      vue-cropper:
+        specifier: ^1.1.2
+        version: 1.1.2
       vue-tsc:
         specifier: ^2.0.15
         version: 2.0.15(typescript@5.4.5)
@@ -4229,6 +4232,9 @@ packages:
 
   vue-component-type-helpers@2.0.6:
     resolution: {integrity: sha512-qdGXCtoBrwqk1BT6r2+1Wcvl583ZVkuSZ3or7Y1O2w5AvWtlvvxwjGhmz5DdPJS9xqRdDlgTJ/38ehWnEi0tFA==, tarball: https://registry.npmjs.org/vue-component-type-helpers/-/vue-component-type-helpers-2.0.6.tgz}
+
+  vue-cropper@1.1.2:
+    resolution: {integrity: sha512-S4cmvQzdNiVpNGigFwgULSwxWp55bdD1xf+RIEH+4mLDpD9/MUjNoHf970V3nFX7SerUrPZbOXG/ZBaD6pxfWQ==, tarball: https://registry.npmjs.org/vue-cropper/-/vue-cropper-1.1.2.tgz}
 
   vue-demi@0.14.7:
     resolution: {integrity: sha512-EOG8KXDQNwkJILkx/gPcoL/7vH+hORoBaKgGe+6W7VFMvCYJfmF2dGbvgDroVnI8LU7/kTu8mbjRZGBU1z9NTA==, tarball: https://registry.npmjs.org/vue-demi/-/vue-demi-0.14.7.tgz}
@@ -9207,6 +9213,8 @@ snapshots:
       vue: 3.4.26(typescript@5.4.5)
 
   vue-component-type-helpers@2.0.6: {}
+
+  vue-cropper@1.1.2: {}
 
   vue-demi@0.14.7(vue@3.4.26(typescript@5.4.5)):
     dependencies:

@@ -67,6 +67,7 @@
     "vite-plugin-dts": "^3.9.0",
     "vitest": "^1.5.2",
     "vue": "^3.4.26",
+    "vue-cropper": "^1.1.2",
     "vue-tsc": "^2.0.15"
   },
   "simple-git-hooks": {

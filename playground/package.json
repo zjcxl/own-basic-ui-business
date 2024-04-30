@@ -50,6 +50,7 @@
     "vfonts": "^0.0.3",
     "vite": "^5.2.10",
     "vitest": "^1.5.2",
+    "vue-cropper": "^1.1.2",
     "vue-tsc": "^2.0.15"
   },
   "engines": {
