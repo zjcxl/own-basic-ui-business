@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue'
-import { NImage, NImageGroup, NProgress } from 'naive-ui'
+import { NCard, NImage, NImageGroup, NModal, NProgress } from 'naive-ui'
 import { BaseFileSelectButton } from '@own-basic-component/vue'
 import { useMessage } from '@own-basic-component/util'
 import type { PictureOptimizeType, UploadPictureWallShowModel } from './types'
@@ -577,8 +577,8 @@ onMounted(() => {
       type="file"
       @change="handleChangeSelectFile"
     >
-    <n-modal v-model:show="copperModal.visible">
-      <n-card
+    <NModal v-model:show="copperModal.visible">
+      <NCard
         class="h-80vh w-80%"
         title="裁剪图片"
         size="huge"
@@ -592,7 +592,7 @@ onMounted(() => {
           @save="handleSaveCopper"
           @cancel="handleCancelCopper"
         />
-      </n-card>
-    </n-modal>
+      </NCard>
+    </NModal>
   </div>
 </template>

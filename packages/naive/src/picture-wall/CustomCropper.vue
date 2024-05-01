@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { NANOID } from '@own-basic-component/util'
+import { NButton, NDivider } from 'naive-ui'
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
 import { ref } from 'vue'
