@@ -18,6 +18,10 @@ export interface NumberAdvancedExtra {
    * 最小值
    */
   min?: number
+  /**
+   * 是否可清除
+   */
+  clearable?: boolean
 }
 
 /**

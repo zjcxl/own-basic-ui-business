@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { NInputNumber } from 'naive-ui'
+import {NInputNumber, NSelect} from 'naive-ui'
 import { onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
 import type { QueryObjectType } from '@own-basic-component/config'
@@ -52,7 +52,7 @@ defineExpose({
     :min="props.extra?.min"
     :placeholder="props.placeholder"
     :step="props.extra?.step || 1"
-    clearable
+    :clearable="props.extra?.clearable ?? true"
     @update:value="handleChangeValue"
   />
 </template>

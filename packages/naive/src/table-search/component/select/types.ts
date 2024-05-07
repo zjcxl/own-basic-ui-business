@@ -12,6 +12,7 @@ export interface SelectAdvancedOption {
    * 主要选项
    */
   options: SelectMixedOption[]
+
   /**
    * 是否显示tag
    */
@@ -20,6 +21,10 @@ export interface SelectAdvancedOption {
    * 是否可过滤
    */
   filterable?: boolean
+  /**
+   * 是否可清除
+   */
+  clearable?: boolean
   /**
    * 是否允许多选
    */

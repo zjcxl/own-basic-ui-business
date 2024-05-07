@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { NSelect } from 'naive-ui'
+import {NDatePicker, NSelect} from 'naive-ui'
 import { computed, onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
 import type { QueryObjectType } from '@own-basic-component/config'
@@ -66,7 +66,7 @@ defineExpose({
     :options="props.extra?.options"
     :placeholder="props.placeholder"
     :tag="tag"
-    clearable
+    :clearable="props.extra?.clearable ?? true"
     @update:value="handleChangeValue"
   />
 </template>
