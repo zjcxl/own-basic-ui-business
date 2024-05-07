@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {NInputNumber, NSelect} from 'naive-ui'
+import { NInputNumber } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
 import type { QueryObjectType } from '@own-basic-component/config'
