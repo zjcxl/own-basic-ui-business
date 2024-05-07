@@ -13,6 +13,10 @@ export interface DatePicker {
    * 格式化字符串
    */
   format?: string
+  /**
+   * 是否可清除
+   */
+  clearable?: boolean
 }
 
 /**

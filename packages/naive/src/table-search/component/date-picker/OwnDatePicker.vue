@@ -56,7 +56,7 @@ defineExpose({
     v-model:value="value"
     :disabled="props.disabled"
     :format="formatter"
-    clearable
+    :clearable="props.extra?.clearable ?? true"
     type="date"
     @update:value="handleChangeValue"
   />

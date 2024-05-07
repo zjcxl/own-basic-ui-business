@@ -92,7 +92,7 @@ defineExpose({
     :disabled="props.disabled"
     :format="formatter"
     :shortcuts="finalShortcuts"
-    clearable
+    :clearable="props.extra?.clearable ?? true"
     type="daterange"
     @update:value="handleChangeValue"
   />
