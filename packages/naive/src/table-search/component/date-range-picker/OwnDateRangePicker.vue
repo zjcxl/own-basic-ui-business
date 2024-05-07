@@ -41,8 +41,14 @@ const finalShortcuts = computed<DateRangeShortcutsType>(() => {
     const t = props.extra?.shortcutsSetting?.second
     const resultMap: DateRangeShortcutsType = {}
     Object.keys(props.extra?.shortcuts).forEach((key) => {
-      const [time1, time2] = props.extra?.shortcuts?.[key] || [0, 0]
-      resultMap[key] = [time1, time2 - t]
+      const item = props.extra?.shortcuts?.[key]
+      if (typeof item === 'function') {
+        resultMap[key] = item
+      }
+      else {
+        const [time1, time2] = item || [0, 0]
+        resultMap[key] = [time1, time2 - t]
+      }
     })
     return resultMap
   }

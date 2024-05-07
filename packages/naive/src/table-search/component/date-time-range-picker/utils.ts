@@ -4,10 +4,12 @@ import type { DateTimeRangeShortcutsType } from './types'
  * 今天的时间范围
  */
 export function todayDatetime(): DateTimeRangeShortcutsType {
-  const now = new Date()
-  const nowTimestamp = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
   return {
-    [`今天`]: () => [nowTimestamp, nowTimestamp + 24 * 60 * 60 * 1000],
+    [`今天`]: () => {
+      const now = new Date()
+      const nowTimestamp = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
+      return [nowTimestamp, nowTimestamp + 24 * 60 * 60 * 1000]
+    },
   }
 }
 
@@ -15,10 +17,12 @@ export function todayDatetime(): DateTimeRangeShortcutsType {
  * 昨天
  */
 export function yesterdayDatetime(): DateTimeRangeShortcutsType {
-  const now = new Date()
-  const nowTimestamp = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
   return {
-    [`昨天`]: () => [nowTimestamp - 24 * 60 * 60 * 1000, nowTimestamp],
+    [`昨天`]: () => {
+      const now = new Date()
+      const nowTimestamp = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
+      return [nowTimestamp - 24 * 60 * 60 * 1000, nowTimestamp]
+    },
   }
 }
 
@@ -28,9 +32,11 @@ export function yesterdayDatetime(): DateTimeRangeShortcutsType {
  * @param text
  */
 export function lastNDaysDatetime(n: number, text: string = `近${n}天`): DateTimeRangeShortcutsType {
-  const nowTimestamp = new Date().getTime()
   return {
-    [text]: () => [nowTimestamp - n * 24 * 60 * 60 * 1000, nowTimestamp],
+    [text]: () => {
+      const nowTimestamp = new Date().getTime()
+      return [nowTimestamp - n * 24 * 60 * 60 * 1000, nowTimestamp]
+    },
   }
 }
 
