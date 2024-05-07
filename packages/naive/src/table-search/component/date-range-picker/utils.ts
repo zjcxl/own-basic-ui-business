@@ -7,7 +7,7 @@ export function todayDate(): DateRangeShortcutsType {
   const now = new Date()
   const nowTimestamp = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
   return {
-    [`今天`]: [nowTimestamp, nowTimestamp + 24 * 60 * 60 * 1000],
+    [`今天`]: () => [nowTimestamp, nowTimestamp + 24 * 60 * 60 * 1000],
   }
 }
 
@@ -18,7 +18,7 @@ export function yesterdayDate(): DateRangeShortcutsType {
   const now = new Date()
   const nowTimestamp = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
   return {
-    [`昨天`]: [nowTimestamp - 24 * 60 * 60 * 1000, nowTimestamp],
+    [`昨天`]: () => [nowTimestamp - 24 * 60 * 60 * 1000, nowTimestamp],
   }
 }
 
@@ -30,7 +30,7 @@ export function yesterdayDate(): DateRangeShortcutsType {
 export function lastNDaysDate(n: number, text: string = `近${n}天`): DateRangeShortcutsType {
   const nowTimestamp = new Date().getTime()
   return {
-    [text]: [nowTimestamp - n * 24 * 60 * 60 * 1000, nowTimestamp],
+    [text]: () => [nowTimestamp - n * 24 * 60 * 60 * 1000, nowTimestamp],
   }
 }
 

@@ -17,7 +17,7 @@ export type DateTimeRangeFieldFormatType = [
 /**
  * 日期时间范围快捷键的类型
  */
-export type DateTimeRangeShortcutsValueType = [number, number]
+export type DateTimeRangeShortcutsValueType = [number, number] | (() => [number, number])
 export type DateTimeRangeShortcutsType = Record<string, DateTimeRangeShortcutsValueType>
 
 export interface DateTimeRangeShortcutsSettingType {
