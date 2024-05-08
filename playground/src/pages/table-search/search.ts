@@ -46,6 +46,26 @@ export const search: DefaultSearchPropsValueType[] = [
     },
   },
   {
+    type: 'radio',
+    field: 'radio status',
+    defaultValue: 2,
+    placeholder: '请选择筛选的状态',
+    extra: {
+      label: '状态',
+      button: false,
+      options: [
+        {
+          value: 1,
+          label: '成功',
+        },
+        {
+          value: 2,
+          label: '失败',
+        },
+      ],
+    },
+  },
+  {
     type: 'select',
     width: 20,
     field: 'client',

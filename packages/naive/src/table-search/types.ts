@@ -19,6 +19,7 @@ import type {
   SelectSearchPropsType,
   TextSearchPropsType,
 } from './component'
+import type { RADIO_SEARCH_TYPE, RadioSearchPropsType } from './component/radio'
 
 /**
  * 类型信息
@@ -33,6 +34,7 @@ export interface SearchPropsType {
   [SEARCH_TYPE_SELECT]: SelectSearchPropsType
   [SEARCH_TYPE_SELECT_MULTIPLE]: SelectMultiplePropsType
   [SEARCH_TYPE_NUMBER]: NumberPropsType
+  [RADIO_SEARCH_TYPE]: RadioSearchPropsType
 }
 
 /**

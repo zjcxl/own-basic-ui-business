@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {NDatePicker, NSelect} from 'naive-ui'
+import { NSelect } from 'naive-ui'
 import { computed, onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
 import type { QueryObjectType } from '@own-basic-component/config'
