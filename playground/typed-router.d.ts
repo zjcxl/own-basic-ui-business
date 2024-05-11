@@ -23,5 +23,6 @@ declare module 'vue-router/auto-routes' {
     '/picture-wall/': RouteRecordInfo<'/picture-wall/', '/picture-wall', Record<never, never>, Record<never, never>>,
     '/table/': RouteRecordInfo<'/table/', '/table', Record<never, never>, Record<never, never>>,
     '/table-search/': RouteRecordInfo<'/table-search/', '/table-search', Record<never, never>, Record<never, never>>,
+    '/upload-file/': RouteRecordInfo<'/upload-file/', '/upload-file', Record<never, never>, Record<never, never>>,
   }
 }
