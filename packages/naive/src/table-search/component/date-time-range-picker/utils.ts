@@ -1,4 +1,4 @@
-import type { DateTimeRangeShortcutsType } from './types'
+import type { DateTimeRangeShortcutsType, DateTimeRangeShortcutsValueType } from './types'
 
 /**
  * 今天的时间范围
@@ -32,11 +32,17 @@ export function yesterdayDatetime(): DateTimeRangeShortcutsType {
  * @param text
  */
 export function lastNDaysDatetime(n: number, text: string = `近${n}天`): DateTimeRangeShortcutsType {
-  return {
-    [text]: () => {
-      const nowTimestamp = new Date().getTime()
-      return [nowTimestamp - (n - 1) * 24 * 60 * 60 * 1000, nowTimestamp]
-    },
+  return { [text]: lastNDaysDatetimeTuple2(n) }
+}
+
+/**
+ * 近n天
+ * @param n
+ */
+export function lastNDaysDatetimeTuple2(n: number): DateTimeRangeShortcutsValueType {
+  return () => {
+    const nowTimestamp = new Date().getTime()
+    return [nowTimestamp - (n - 1) * 24 * 60 * 60 * 1000, nowTimestamp]
   }
 }
 
