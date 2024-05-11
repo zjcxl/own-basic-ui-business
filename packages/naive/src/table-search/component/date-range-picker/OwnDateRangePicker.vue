@@ -5,7 +5,12 @@ import { computed, onMounted, ref } from 'vue'
 import { sendAe } from '@own-basic-component/buried'
 import type { QueryObjectType } from '@own-basic-component/config'
 
-import type { DateRangeFieldFormatType, DateRangePicker, DateRangeShortcutsType } from './types'
+import type {
+  DateRangeFieldFormatType,
+  DateRangePicker,
+  DateRangeShortcutsType,
+  DateRangeValueFormatType,
+} from './types'
 
 const props = withDefaults(defineProps<{
   defaultValue?: [number, number]
@@ -66,7 +71,17 @@ const defaultDateTimeRangeFieldFormat: DateRangeFieldFormatType = [
 /**
  * 字段格式化数组
  */
-const fieldFormatArray = computed<DateRangeFieldFormatType>(() => props.extra?.fieldFormat || defaultDateTimeRangeFieldFormat)
+const fieldFormatArray = computed<DateRangeFieldFormatType>(() => props.extra?.getType?.fieldFormat || defaultDateTimeRangeFieldFormat)
+
+/**
+ * 默认的值格式化数组
+ */
+const defaultDateTimeRangeValueFormat: DateRangeValueFormatType = [value => value, value => value]
+
+/**
+ * 值格式化数组
+ */
+const valueFormatArray = computed<DateRangeValueFormatType>(() => props.extra?.getType?.valueFormat || defaultDateTimeRangeValueFormat)
 
 onMounted(() => {
   value.value = props.defaultValue
@@ -84,9 +99,13 @@ function handleChangeValue() {
 defineExpose({
   getParams: (): QueryObjectType => {
     const result = {} as QueryObjectType
-    fieldFormatArray.value.forEach((method, index) => {
-      result[method(props.field)] = value.value?.[index] ? format(new Date(value.value[index]), formatter.value) : undefined
-    })
+    const length = Math.min(fieldFormatArray.value.length, valueFormatArray.value.length)
+    for (let i = 0; i < length; i++) {
+      const fieldFormatter = fieldFormatArray.value[i]
+      const valueFormatter = valueFormatArray.value[i]
+      const tempValue = value.value?.[i] ? format(new Date(value.value[i]), formatter.value) : undefined
+      result[fieldFormatter(props.field)] = valueFormatter(tempValue)
+    }
     return result
   },
 })

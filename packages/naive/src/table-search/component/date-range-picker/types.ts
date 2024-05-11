@@ -15,9 +15,19 @@ export type DateRangeFieldFormatType = [
 ]
 
 /**
+ * 日期范围选择器的类型
+ */
+export type DateRangeValueFormatType = [
+  (value: string | undefined) => string | undefined,
+  (value: string | undefined) => string | undefined,
+]
+
+/**
  * 日期范围快捷键的类型
  */
-export type DateRangeShortcutsValueType = [number, number] | (() => [number, number])
+export type DateRangeValueType = [number, number]
+export type DateRangeValueFunctionType = () => [number, number]
+export type DateRangeShortcutsValueType = DateRangeValueType | DateRangeValueFunctionType
 export type DateRangeShortcutsType = Record<string, DateRangeShortcutsValueType>
 
 export interface DateRangeShortcutsSettingType {
@@ -27,14 +37,25 @@ export interface DateRangeShortcutsSettingType {
   second?: number
 }
 
+export interface DateRangeDataGetType {
+  /**
+   * 字段格式化
+   */
+  fieldFormat?: DateRangeFieldFormatType
+  /**
+   * 获取的值格式化
+   */
+  valueFormat?: DateRangeValueFormatType
+}
+
 /**
  * 日期选择器的参数
  */
 export interface DateRangePicker extends DatePicker {
   /**
-   * 字段格式化
+   * 获取的值的内容格式化
    */
-  fieldFormat?: DateRangeFieldFormatType
+  getType: DateRangeDataGetType
   /**
    * 快捷操作
    */
@@ -50,6 +71,6 @@ export interface DateRangePicker extends DatePicker {
  */
 export type DateRangePickerSearchPropsType = BaseSearchProps<
   typeof SEARCH_TYPE_DATE_RANGE_PICKER,
-  [number, number],
+  DateRangeValueType,
   DateRangePicker
 >
