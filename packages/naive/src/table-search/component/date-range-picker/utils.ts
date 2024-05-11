@@ -35,7 +35,7 @@ export function lastNDaysDate(n: number, text: string = `近${n}天`): DateRange
   return {
     [text]: () => {
       const nowTimestamp = new Date().getTime()
-      return [nowTimestamp - n * 24 * 60 * 60 * 1000, nowTimestamp]
+      return [nowTimestamp - (n - 1) * 24 * 60 * 60 * 1000, nowTimestamp]
     },
   }
 }
