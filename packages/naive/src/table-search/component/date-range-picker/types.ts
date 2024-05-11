@@ -55,7 +55,7 @@ export interface DateRangePicker extends DatePicker {
   /**
    * 获取的值的内容格式化
    */
-  getType: DateRangeDataGetType
+  getType?: DateRangeDataGetType
   /**
    * 快捷操作
    */
