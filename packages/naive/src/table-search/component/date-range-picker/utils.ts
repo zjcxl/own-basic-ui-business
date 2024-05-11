@@ -8,7 +8,7 @@ export function todayDate(): DateRangeShortcutsType {
     [`今天`]: () => {
       const now = new Date()
       const nowTimestamp = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
-      return [nowTimestamp, nowTimestamp + 24 * 60 * 60 * 1000]
+      return [nowTimestamp, nowTimestamp]
     },
   }
 }
@@ -21,7 +21,7 @@ export function yesterdayDate(): DateRangeShortcutsType {
     [`昨天`]: () => {
       const now = new Date()
       const nowTimestamp = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
-      return [nowTimestamp - 24 * 60 * 60 * 1000, nowTimestamp]
+      return [nowTimestamp - 24 * 60 * 60 * 1000, nowTimestamp - 24 * 60 * 60 * 1000]
     },
   }
 }
