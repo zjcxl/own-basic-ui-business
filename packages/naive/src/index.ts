@@ -9,3 +9,6 @@ export * from './config/message'
 
 // 图片选择
 export * from './picture-wall'
+
+// 文件上传
+export * from './upload-file'
