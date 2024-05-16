@@ -72,6 +72,10 @@ const props = withDefaults(defineProps<{
    * 等待中的文字描述
    */
   textWaiting?: string
+  /**
+   * 文件类型
+   */
+  accept?: string
 }>(), {
   allowUpload: true,
   defaultFileList: () => ([]),
@@ -98,11 +102,6 @@ const props = withDefaults(defineProps<{
   textUploading: '上传中...',
   textWaiting: '等待中...',
 })
-
-/**
- * 文件选择器
- */
-const fileRef = ref<HTMLInputElement>()
 
 /**
  * 显示的图片
@@ -146,30 +145,6 @@ function handleChangeFile(fileList: File[]) {
 }
 
 /**
- * 编辑信息的索引
- */
-const editIndex = ref<number>(-1)
-
-/**
- * 获取文件事件
- * @param e 事件
- */
-function handleChangeSelectFile(e: Event) {
-  const selectFileList = (e.target as HTMLInputElement).files
-  if (selectFileList && selectFileList.length > 0) {
-    const file = selectFileList[0]
-    // 过滤图片的限制大小
-    if (props.limitSize !== 0 && file.size > props.limitSize * 1024) {
-      props.onLimitSizeOverflow([file])
-      return
-    }
-    resultFileList.value.splice(editIndex.value, 1, createUploadFileInfoItem(file))
-    resolveFileList()
-    fileRef.value!.value = ''
-  }
-}
-
-/**
  * 跳过解析的图片状态
  */
 const skipStatus = ['done', 'error', 'resolving', 'uploading']
@@ -178,6 +153,21 @@ const skipStatus = ['done', 'error', 'resolving', 'uploading']
  * 是否正在上传
  */
 let uploading = false
+
+/**
+ * 点击删除
+ * @param index
+ */
+function handleClickDelete(index: number) {
+  // 获取对应的信息
+  const item = resultFileList.value[index]
+  resultFileList.value.splice(index, 1)
+  props.onChangeFileList(getUrlList())
+  if (!props.parallelUpload && item.status === 'uploading') {
+    // 如果是并行上传的情况下，需要重新解析图片
+    resolveFileList()
+  }
+}
 
 /**
  * 处理图片
@@ -264,32 +254,49 @@ onMounted(() => {
   <div class="flex flex-col gap-2">
     <BaseFileSelectButton
       v-if="showUploadButton"
-      accept="image/*"
+      :accept="props.accept"
       :multiple="props.multiple"
       @change="handleChangeFile"
     >
       <NButton>上传文件</NButton>
     </BaseFileSelectButton>
-    <input
-      v-if="props.showEditButton"
-      ref="fileRef"
-      :multiple="false"
-      accept="image/*"
-      hidden
-      type="file"
-      @change="handleChangeSelectFile"
-    >
     <div class="flex flex-col">
       <div
-        v-for="index in 10"
+        v-for="(item, index) in resultFileList"
         :key="index"
-        class="flex cursor-pointer items-center gap-1 border-rd-1 px-4 py-3 transition-colors-300 hover:bg-gray/40"
+        class="relative flex items-center gap-1 overflow-hidden border-rd-1 px-4 py-3 transition-colors-300 hover:bg-gray/40"
       >
-        <span class="flex-[0_0_auto]] w-2em">{{ index }}</span>
-        <span class="w-100%">文件列表.doc</span>
-        <span class="flex-[0_0_auto]] flex items-center justify-center">
-          <i class="i-carbon-close" />
-        </span>
+        <div class="z-1 h-100% w-100% flex cursor-pointer items-center gap-1">
+          <span class="w-2em flex-[0_0_auto]">{{ index + 1 }}</span>
+          <template v-if="item.status === 'waiting'">
+            <span class="i-carbon-time" />
+          </template>
+          <template v-else-if="item.status === 'uploading'">
+            <span class="flex-[0_0_auto]">
+              (上传中)
+            </span>
+          </template>
+          <template v-else-if="item.status === 'resolving'">
+            <span class="flex-[0_0_auto]">
+              (处理中)
+            </span>
+          </template>
+          <template v-else>
+            <span class="mr-3 h-1.5em w-1.5em flex flex-[0_0_auto] items-center justify-center border-rd-50% bg-green color-white font-bold">
+              <span class="i-carbon-checkmark" />
+            </span>
+          </template>
+          <span class="w-100%">{{ item.file?.name || '未命名' }}</span>
+          <span class="flex flex-[0_0_auto] items-center justify-center" @click="handleClickDelete(index)">
+            <i class="i-carbon-close" />
+          </span>
+        </div>
+        <template v-if="item.status === 'uploading'">
+          <span
+            class="absolute left-0 top-0 z-0 h-100% w-100% bg-green transition-all-300"
+            :style="`left:${-100 + (item.size?.uploaded || 0) / (item.size?.total || 1) * 100}%;`"
+          />
+        </template>
       </div>
     </div>
   </div>
