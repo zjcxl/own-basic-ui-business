@@ -213,6 +213,7 @@ function innerUpload(item: UploadPictureWallShowModel): Promise<void> {
           item.status = 'resolving'
       }
     }).then((url) => {
+      console.log(url)
       if (url)
         item.url = url
       item.status = 'done'

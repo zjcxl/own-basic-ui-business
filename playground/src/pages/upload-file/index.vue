@@ -26,6 +26,14 @@ function handleUploadFile(file: File, onUploadProgress: (event: Partial<Progress
     }, 1000 * uploadTime.value)
   })
 }
+
+/**
+ * 修改文件数组后的回调
+ * @param urlList
+ */
+function handleChangeUrl(urlList: string[]) {
+  console.log(urlList)
+}
 </script>
 
 <template>
@@ -33,6 +41,7 @@ function handleUploadFile(file: File, onUploadProgress: (event: Partial<Progress
     <div class="w-400px">
       <NCard>
         <UpdateFile
+          @change-file-list="handleChangeUrl"
           @upload-file="handleUploadFile"
         />
       </NCard>
