@@ -3,8 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 import { BaseFileSelectButton } from '@own-basic-component/vue'
 import { useMessage } from '@own-basic-component/util'
 import { NButton } from 'naive-ui'
-import type { UploadPictureWallShowModel } from '../picture-wall'
-import type { UploadFileInfo } from './types'
+import type { UploadFileInfo, UploadFileStatus } from './types'
 import { createUploadFileInfoItem } from './utils'
 
 const props = withDefaults(defineProps<{
@@ -147,7 +146,7 @@ function handleChangeFile(fileList: File[]) {
 /**
  * 跳过解析的图片状态
  */
-const skipStatus = ['done', 'error', 'resolving', 'uploading']
+const skipStatus: UploadFileStatus[] = ['done', 'error', 'resolving', 'uploading']
 
 /**
  * 是否正在上传
@@ -202,7 +201,7 @@ async function resolveFileList() {
  * 处理文件的方法
  * @param item
  */
-function innerUpload(item: UploadPictureWallShowModel): Promise<void> {
+function innerUpload(item: UploadFileInfo): Promise<void> {
   return new Promise((resolve) => {
     // 执行上传文件
     props.onUploadFile(item.file!, (event) => {
@@ -213,7 +212,6 @@ function innerUpload(item: UploadPictureWallShowModel): Promise<void> {
           item.status = 'resolving'
       }
     }).then((url) => {
-      console.log(url)
       if (url)
         item.url = url
       item.status = 'done'
@@ -271,6 +269,11 @@ onMounted(() => {
           <span class="w-2em flex-[0_0_auto]">{{ index + 1 }}</span>
           <template v-if="item.status === 'waiting'">
             <span class="i-carbon-time" />
+          </template>
+          <template v-else-if="item.status === 'md5'">
+            <span class="flex-[0_0_auto]">
+              (计算MD5中)
+            </span>
           </template>
           <template v-else-if="item.status === 'uploading'">
             <span class="flex-[0_0_auto]">

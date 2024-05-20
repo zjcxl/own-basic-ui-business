@@ -5,8 +5,9 @@
  * error - 错误
  * waiting - 等待中
  * resolving - 处理中
+ * md5 - 计算md5中
  */
-export type UploadFileStatus = 'done' | 'uploading' | 'error' | 'waiting' | 'resolving'
+export type UploadFileStatus = 'done' | 'uploading' | 'error' | 'waiting' | 'resolving' | 'md5'
 
 /**
  * 上传的文件信息
