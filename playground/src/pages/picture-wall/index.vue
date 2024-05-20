@@ -18,7 +18,7 @@ const showDeleteButton = ref<boolean>(true)
 const allowUpload = ref<boolean>(true)
 const multiple = ref<boolean>(true)
 const parallelUpload = ref<boolean>(false)
-const useCopper = ref<boolean>(true)
+const useCopper = ref<boolean>(false)
 const thumbnailOptimize = ref<PictureOptimizeType>('none')
 
 /**

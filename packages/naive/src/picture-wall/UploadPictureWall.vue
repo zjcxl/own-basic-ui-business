@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { NCard, NImage, NImageGroup, NModal, NProgress } from 'naive-ui'
 import { BaseFileSelectButton } from '@own-basic-component/vue'
-import { useMessage } from '@own-basic-component/util'
-import type { PictureOptimizeType, UploadPictureWallShowModel } from './types'
+import { useMessage, useTaskRunnerItem, useTaskRunnerSequenceItem } from '@own-basic-component/util'
+import type {
+  PictureOptimizeType,
+  UploadPictureWallShowModel,
+} from './types'
+
 import { createUploadPictureWallItem, handleThumbnailUrl } from './utils'
+import OperationIcon from './component/OperationIcon.vue'
+import OperationStep from './component/OperationStep.vue'
+import CustomCropper from './component/CustomCropper.vue'
 
 const props = withDefaults(defineProps<{
   /**
@@ -138,14 +145,28 @@ const slots = defineSlots<{
 }>()
 
 /**
- * 自定义的图片组件
- */
-const CustomCropper = defineAsyncComponent(() => import('./CustomCropper.vue'))
-
-/**
  * 文件选择器
  */
 const fileRef = ref<HTMLInputElement>()
+
+const resultList = ref<string[]>()
+
+const dataUrlMap = new Map<string, UploadPictureWallShowModel>()
+const urlAndDataUrlMap = new Map<string, string>()
+
+const showList = computed<UploadPictureWallShowModel[]>(() => {
+  [
+    // 结果的列表
+    ...resultList.value?.map((url, index) => ({
+      url,
+      dataUrl: urlAndDataUrlMap.get(url),
+      status: 'done',
+      index,
+    })),
+    // 正在进行中的列表
+    ...[],
+  ].sort()
+})
 
 /**
  * 大小样式
@@ -174,11 +195,11 @@ const showDonePanel = computed<boolean>(() => props.showPreviewButton || props.s
 const copperModal = reactive<{
   visible: boolean
   src: string
-  index: number
+  index: string
 }>({
   visible: false,
   src: '',
-  index: -1,
+  index: '',
 })
 
 /**
@@ -219,15 +240,16 @@ function handleClickEdit(index: number) {
 }
 
 /**
- * 跳过解析的图片状态
+ * 上传文件的任务执行器
  */
-const skipStatus = ['done', 'error', 'resolving', 'uploading']
-
-/**
- * 处理文件的方法
- * @param item
- */
-function innerUpload(item: UploadPictureWallShowModel): Promise<void> {
+const uploadTaskRunner = useTaskRunnerItem<string>((dataUrl) => {
+  // 查询目标的item
+  const item = resultImageList.value.find(item => item.dataUrl === dataUrl)
+  if (!item)
+    return Promise.resolve()
+  // 将状态设置为上传中
+  item.status = 'uploading'
+  // 执行上传任务
   return new Promise((resolve) => {
     // 执行上传文件
     props.onUploadFile(item.file!, (event) => {
@@ -246,97 +268,71 @@ function innerUpload(item: UploadPictureWallShowModel): Promise<void> {
       resolve()
     })
   })
-}
-
-let uploading: boolean = false
+}, { concurrency: 1 })
 
 /**
- * 处理图片
+ * 图片裁剪的任务执行器
  */
-async function resolveImageList() {
-  if (uploading)
-    return
-  uploading = true
-  do {
-    const resultList = resultImageList.value.filter(item => !skipStatus.includes(item.status))
-    // 获取第一个在等待中的图片
-    const item = resultList.find(item => item.status === 'waiting')
-    if (!item) {
-      uploading = false
-      break
-    }
-    if (!item.file) {
-      item.status = 'error'
-    }
-    else {
-      // 将状态设置为上传中
-      item.status = 'uploading'
-      if (props.parallelUpload)
-        innerUpload(item).then(() => {})
-      else
-        await innerUpload(item)
-    }
-  } while (true)
-}
-
-/**
- * 裁剪图片处理
- */
-function resolveCopperImageList() {
-  // 获取第一张等待裁剪的图片
-  const index = resultImageList.value.findIndex(item => item.status === 'waiting-copper')
-  const item = resultImageList.value[index]
-  if (!item) {
-    resolveImageList()
-    return
-  }
-  item.status = 'coppering'
-  copperModal.index = index
-  copperModal.src = item.dataUrl!
+const copperTaskRunner = useTaskRunnerSequenceItem<UploadPictureWallShowModel>((model) => {
+  model.status = 'coppering'
+  copperModal.index = model.dataUrl!
+  copperModal.src = model.dataUrl!
   copperModal.visible = true
-}
+  return Promise.resolve()
+})
+
+/**
+ * 图片裁剪等待的任务执行器
+ */
+const copperWaitingTaskRunner = useTaskRunnerItem<File>((file) => {
+  const item = createUploadPictureWallItem(file, 'copper-waiting')
+  dataUrlMap.set(item.dataUrl!, item)
+  // 将当前的数据添加到列表中
+  resultImageList.value.push(item)
+  if (props.useCopper) {
+    copperTaskRunner.append(item)
+  }
+  else {
+    item.status = 'waiting'
+    uploadTaskRunner.append(item.dataUrl!)
+  }
+  return Promise.resolve()
+}, { concurrency: 10 })
+
+/**
+ * 选择文件的任务执行器
+ */
+const selectTaskRunner = useTaskRunnerItem<File>((file) => {
+  // 过滤图片的限制大小
+  if (props.limitSize !== 0) {
+    const limitSize = props.limitSize * 1024
+    if (file.size > limitSize) {
+      props.onLimitSizeOverflow([file])
+      return Promise.resolve()
+    }
+  }
+  if (props.maxCount !== 0) {
+    // 判断选择的图片是否超过了最大的数量
+    const count = resultImageList.value.length - props.maxCount + 1
+    if (count > 0) {
+      // 获取到多余的图片
+      props.onAfterSelectOverflow([file])
+      return Promise.resolve()
+    }
+  }
+  // 将值添加到下一个步骤中
+  copperWaitingTaskRunner.append(file)
+  return Promise.resolve()
+}, {
+  concurrency: 10,
+})
 
 /**
  * 修改文件事件
  * @param fileList
  */
 function handleChangeFile(fileList: File[]) {
-  let resultList = fileList
-  // 过滤图片的限制大小
-  if (props.limitSize !== 0) {
-    const limitSize = props.limitSize * 1024
-    const array = resultList.filter(file => file.size > limitSize)
-    if (array.length > 0)
-      props.onLimitSizeOverflow(array)
-    resultList = resultList.filter(file => file.size <= limitSize)
-  }
-  if (resultList.length === 0)
-    return
-  if (props.maxCount !== 0) {
-    // 判断选择的图片是否超过了最大的数量
-    const count = resultList.length + resultImageList.value.length - props.maxCount
-    if (count > 0) {
-      const index = resultList.length - count
-      // 获取到多余的图片
-      const overflowList = resultList.slice(index)
-      props.onAfterSelectOverflow(overflowList)
-      resultList = resultList.slice(0, index)
-    }
-  }
-  // 判断是否需要使用copper
-  if (props.useCopper) {
-    resultList.forEach((file) => {
-      resultImageList.value.push(createUploadPictureWallItem(file, 'waiting-copper'))
-    })
-    resolveCopperImageList()
-  }
-  else {
-    // 将图片保存到列表中
-    resultList.forEach((file) => {
-      resultImageList.value.push(createUploadPictureWallItem(file))
-    })
-    resolveImageList()
-  }
+  fileList.forEach(file => selectTaskRunner.append(file))
 }
 
 /**
@@ -348,19 +344,15 @@ function handleChangeSelectFile(e: Event) {
   if (selectFileList && selectFileList.length > 0) {
     const file = selectFileList[0]
     // 过滤图片的限制大小
-    if (props.limitSize !== 0 && file.size > props.limitSize * 1024) {
-      props.onLimitSizeOverflow([file])
-      return
+    if (props.limitSize !== 0) {
+      const limitSize = props.limitSize * 1024
+      if (file.size > limitSize) {
+        props.onLimitSizeOverflow([file])
+        return
+      }
     }
-    // 判断是否需要使用copper
-    if (props.useCopper) {
-      resultImageList.value.splice(editIndex.value, 1, createUploadPictureWallItem(file, 'waiting-copper'))
-      resolveCopperImageList()
-    }
-    else {
-      resultImageList.value.splice(editIndex.value, 1, createUploadPictureWallItem(file))
-      resolveImageList()
-    }
+    // 将值添加到下一个步骤中
+    copperWaitingTaskRunner.append(file)
     fileRef.value!.value = ''
   }
 }
@@ -371,32 +363,36 @@ function handleChangeSelectFile(e: Event) {
  * @param file
  */
 function handleSaveCopper(src: string, file: File) {
-  // 获取
-  const item = resultImageList.value[copperModal.index]
+  // 获取上次执行的项目
+  const item = resultImageList.value.find(i => i.dataUrl && i.dataUrl === copperModal.index)
   if (item) {
     item.dataUrl = src
     item.file = file
     item.status = 'waiting'
+    // 将当前图片进行上传处理
+    uploadTaskRunner.append(item)
   }
-  copperModal.index = -1
+  copperModal.index = ''
   copperModal.src = ''
   copperModal.visible = false
   // 再次处理
-  resolveCopperImageList()
+  copperTaskRunner.run()
 }
 
 /**
  * 处理裁剪信息的取消
  */
 function handleCancelCopper() {
-  // 删除信息
-  handleClickDelete(copperModal.index)
+  // 获取上次执行的项目信息
+  const index = resultImageList.value.findIndex(item => item.dataUrl === copperModal.index)
+  // 删除该项目
+  handleClickDelete(index)
   // 初始化
-  copperModal.index = -1
+  copperModal.index = ''
   copperModal.src = ''
   copperModal.visible = false
   // 再次处理
-  resolveCopperImageList()
+  copperTaskRunner.run()
 }
 
 /**
@@ -411,7 +407,6 @@ function getImageUrlList(): string[] {
  */
 function clearList() {
   resultImageList.value = []
-  uploading = false
 }
 
 defineExpose({
@@ -458,99 +453,44 @@ onMounted(() => {
             </div>
           </template>
         </NImage>
-        <div
-          v-if="showDonePanel && item.status === 'done'"
-          class="z-index-1 absolute left-0 top-0 flex items-center justify-center gap-2 bg-black/50 opacity-0 transition-all-400 group-hover:opacity-100"
-          :style="showSize"
-        >
-          <i
-            v-if="props.showPreviewButton"
-            class="i-carbon-view text-1.2em color-white hover:color-red"
-            @click="handleClickPreview(index)"
-          />
-          <i
-            v-if="props.showEditButton"
-            class="i-carbon-edit text-1.2em color-white hover:color-red"
-            @click="handleClickEdit(index)"
-          />
-          <i
-            v-if="props.showDeleteButton"
-            class="i-carbon-trash-can text-1.2em color-white hover:color-red"
-            @click="handleClickDelete(index)"
-          />
-        </div>
-        <template v-if="item.status === 'uploading' || item.status === 'resolving'">
-          <div
-            class="z-index-1 absolute left-0 top-0 flex flex-col items-center justify-center gap-2 bg-black/50 opacity-100 transition-all-400"
-            :style="showSize"
-          >
-            <i
-              class="i-carbon-trash-can text-1.2em color-white hover:color-red"
-              @click="handleClickDelete(index)"
+        <!-- 裁剪等待中 -->
+        <OperationStep v-if="item.status === 'copper-waiting'" :show-size="showSize" text="等待裁剪中..." />
+        <!-- 裁剪中 -->
+        <OperationStep v-if="item.status === 'coppering'" :show-size="showSize" text="裁剪中..." />
+        <!-- 等待中 -->
+        <OperationStep v-if="item.status === 'waiting'" :show-size="showSize" :text="props.textWaiting">
+          <template #operation>
+            <OperationIcon :index="index" icon="i-carbon-trash-can" @click="handleClickDelete" />
+          </template>
+        </OperationStep>
+        <!-- 上传前处理中 -->
+        <OperationStep v-if="item.status === 'upload-before-resolving'" :show-size="showSize" text="上传前处理中" />
+        <!-- 上传中 -->
+        <OperationStep v-if="item.status === 'uploading'" :show-size="showSize" :text="props.textUploading">
+          <template #operation>
+            <OperationIcon :index="index" icon="i-carbon-trash-can" @click="handleClickDelete" />
+          </template>
+          <template v-if="props.progress" #text>
+            <NProgress
+              type="line"
+              :show-indicator="false"
+              status="info"
+              :percentage="(item.size?.uploaded || 0) / (item.size?.total || 1) * 100"
             />
-          </div>
+          </template>
+        </OperationStep>
+        <!-- 上传后处理中 -->
+        <OperationStep v-if="item.status === 'upload-after-resolving'" :show-size="showSize" :text="props.textResolving " />
+        <!-- 上传完成 -->
+        <template v-if="item.status === 'done'">
           <div
-            class="z-index-2 absolute bottom-0 left-0 h-20px w-100% flex items-center justify-center bg-white/50"
-          >
-            <template v-if="props.progress">
-              <NProgress
-                v-if="item.status === 'uploading'"
-                type="line"
-                :show-indicator="false"
-                status="info"
-                :percentage="(item.size?.uploaded || 0) / (item.size?.total || 1) * 100"
-              />
-              <div v-if="item.status === 'resolving'" class="text-0.8em">
-                {{ props.textResolving }}
-              </div>
-            </template>
-            <div v-else class="text-0.8em">
-              {{ props.textUploading }}
-            </div>
-          </div>
-        </template>
-        <template v-if="item.status === 'waiting'">
-          <div
-            class="z-index-1 absolute left-0 top-0 flex flex-col items-center justify-center gap-2 bg-black/50 opacity-100 transition-all-400"
+            v-if="showDonePanel"
+            class="z-index-1 absolute left-0 top-0 flex items-center justify-center gap-2 bg-black/50 opacity-0 transition-all-400 group-hover:opacity-100"
             :style="showSize"
           >
-            <i
-              class="i-carbon-trash-can text-1.2em color-white opacity-0 transition-all-200 hover:color-red group-hover:opacity-100"
-              @click="handleClickDelete(index)"
-            />
-          </div>
-          <div
-            class="z-index-2 absolute bottom-0 left-0 h-20px w-100% flex items-center justify-center bg-white/50"
-          >
-            <div class="text-0.8em">
-              {{ props.textWaiting }}
-            </div>
-          </div>
-        </template>
-        <template v-if="item.status === 'coppering'">
-          <div
-            class="z-index-1 absolute left-0 top-0 flex flex-col items-center justify-center gap-2 bg-black/50 opacity-100 transition-all-400"
-            :style="showSize"
-          />
-          <div
-            class="z-index-2 absolute bottom-0 left-0 h-20px w-100% flex items-center justify-center bg-white/50"
-          >
-            <div class="text-0.8em">
-              裁剪中...
-            </div>
-          </div>
-        </template>
-        <template v-if="item.status === 'waiting-copper'">
-          <div
-            class="z-index-1 absolute left-0 top-0 flex flex-col items-center justify-center gap-2 bg-black/50 opacity-100 transition-all-400"
-            :style="showSize"
-          />
-          <div
-            class="z-index-2 absolute bottom-0 left-0 h-20px w-100% flex items-center justify-center bg-white/50"
-          >
-            <div class="text-0.8em">
-              等待裁剪中...
-            </div>
+            <OperationIcon v-if="props.showPreviewButton" :index="index" icon="i-carbon-view" @click="handleClickPreview" />
+            <OperationIcon v-if="props.showEditButton" :index="index" icon="i-carbon-edit" @click="handleClickEdit" />
+            <OperationIcon v-if="props.showDeleteButton" :index="index" icon="i-carbon-trash-can" @click="handleClickDelete" />
           </div>
         </template>
       </div>

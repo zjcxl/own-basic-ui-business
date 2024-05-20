@@ -54,17 +54,17 @@ importers:
         specifier: ^2.18.1
         version: 2.18.1(@unocss/eslint-plugin@0.60.2(eslint@9.3.0)(typescript@5.4.5))(@vue/compiler-sfc@3.4.27)(eslint@9.3.0)(typescript@5.4.5)(vitest@1.6.0(@types/node@20.12.12)(jsdom@24.0.0)(less@4.2.0))
       '@own-basic-component/buried':
-        specifier: ^0.8.86
-        version: 0.8.86
+        specifier: ^0.8.97
+        version: 0.8.97
       '@own-basic-component/config':
-        specifier: ^0.8.86
-        version: 0.8.86
+        specifier: ^0.8.97
+        version: 0.8.97
       '@own-basic-component/util':
-        specifier: ^0.8.86
-        version: 0.8.86
+        specifier: ^0.8.97
+        version: 0.8.97
       '@own-basic-component/vue':
-        specifier: ^0.8.86
-        version: 0.8.86
+        specifier: ^0.8.97
+        version: 0.8.97
       '@types/node':
         specifier: ^20.12.12
         version: 20.12.12
@@ -150,20 +150,20 @@ importers:
   playground:
     dependencies:
       '@own-basic-component/config':
-        specifier: ^0.8.86
-        version: 0.8.86
+        specifier: ^0.8.97
+        version: 0.8.97
       '@own-basic-component/request':
-        specifier: ^0.8.86
-        version: 0.8.86
+        specifier: ^0.8.97
+        version: 0.8.97
       '@own-basic-component/request-axios':
-        specifier: ^0.8.86
-        version: 0.8.86
+        specifier: ^0.8.97
+        version: 0.8.97
       '@own-basic-component/util':
-        specifier: ^0.8.86
-        version: 0.8.86
+        specifier: ^0.8.97
+        version: 0.8.97
       '@own-basic-component/vue':
-        specifier: ^0.8.86
-        version: 0.8.86
+        specifier: ^0.8.97
+        version: 0.8.97
       '@vueuse/core':
         specifier: ^10.9.0
         version: 10.9.0(vue@3.4.27(typescript@5.4.5))
@@ -1249,27 +1249,27 @@ packages:
   '@one-ini/wasm@0.1.1':
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==, tarball: https://registry.npmjs.org/@one-ini/wasm/-/wasm-0.1.1.tgz}
 
-  '@own-basic-component/buried@0.8.86':
-    resolution: {integrity: sha512-ooIdW6iUXnHDPZpiDmQWgaV6jOmE3X6inqkd6/CZ8D6YY0WG67Ej0TPq2RVzewpp8oP4lBuimWbociNjBRRaYA==, tarball: https://registry.npmjs.org/@own-basic-component/buried/-/buried-0.8.86.tgz}
+  '@own-basic-component/buried@0.8.97':
+    resolution: {integrity: sha512-3IbF6u1SI3qWXB0UFrRgX7hLTrThnSZ4CVGvELlNZlKmuGz9RmhRU8WwG+6O7mUQ03mdKwWKiAkdY/eNp7tQTg==, tarball: https://registry.npmjs.org/@own-basic-component/buried/-/buried-0.8.97.tgz}
     engines: {node: '>=16'}
 
-  '@own-basic-component/config@0.8.86':
-    resolution: {integrity: sha512-aQRxHiVnDOoHBEFbJzoF19pdy6iALUrPHWQNhFxdE3u0VaVK+pYxucqgRbTPOV0MkNbzsJg2672cjHQ9SE0CsQ==, tarball: https://registry.npmjs.org/@own-basic-component/config/-/config-0.8.86.tgz}
+  '@own-basic-component/config@0.8.97':
+    resolution: {integrity: sha512-4r8weYGSnxSsnBsHtzsrTfqTzIdNNDXR05TMX+BLs7hJr0qIbSw5keB76e9SsxZpzugBpd9C6AZ/hjbD11kvCw==, tarball: https://registry.npmjs.org/@own-basic-component/config/-/config-0.8.97.tgz}
 
-  '@own-basic-component/request-axios@0.8.86':
-    resolution: {integrity: sha512-lwXyF25npvJXEwZZufccjHjgl4q9cZXzwCnHszCVOZ3lyeaQG10ngk/pCVj1OArIIC1aKoeew9p61sq61Xx6kQ==, tarball: https://registry.npmjs.org/@own-basic-component/request-axios/-/request-axios-0.8.86.tgz}
+  '@own-basic-component/request-axios@0.8.97':
+    resolution: {integrity: sha512-G+plPl79z/kMJINtABPsO/ptNxEa2tyn0LulNzFpCEiLKeBgCUGR5l1eb2Hteany7Y9XJA76XmppzP0j5JCG6Q==, tarball: https://registry.npmjs.org/@own-basic-component/request-axios/-/request-axios-0.8.97.tgz}
     engines: {node: '>=16'}
 
-  '@own-basic-component/request@0.8.86':
-    resolution: {integrity: sha512-rQiR2MgddvTj6DxOv5xAJNkY+Gh3uNuY0XXE2h2KTP5HM2br7IDhNQekfjTrwj5Bh78DnviprsUYsWsIF6xwvw==, tarball: https://registry.npmjs.org/@own-basic-component/request/-/request-0.8.86.tgz}
+  '@own-basic-component/request@0.8.97':
+    resolution: {integrity: sha512-dTuuRlYjaMg3pgmvTvYoGHGA1Mj2GAEuYk3Rvt4w11Ug02pJzNrpzhsEG2dxFDcNIUyOf1v9aCkFal5xOW0Rnw==, tarball: https://registry.npmjs.org/@own-basic-component/request/-/request-0.8.97.tgz}
     engines: {node: '>=16'}
 
-  '@own-basic-component/util@0.8.86':
-    resolution: {integrity: sha512-t1AxV78slpo1PYGpBq2o0uMHKLaH1fLajwLirps/Wc6S3xuf7BUyEpnU6Oayn2o1EYAANjZc8d3L2bnl5kHYYw==, tarball: https://registry.npmjs.org/@own-basic-component/util/-/util-0.8.86.tgz}
+  '@own-basic-component/util@0.8.97':
+    resolution: {integrity: sha512-f72x0laa4uTZHMzZ3LE6AltGfG8Y5ocDaU76aGLWzG0BpIOqPfEJL928BfEMck233AWSVeP8i3pQlQAVuOfx/Q==, tarball: https://registry.npmjs.org/@own-basic-component/util/-/util-0.8.97.tgz}
     engines: {node: '>=16'}
 
-  '@own-basic-component/vue@0.8.86':
-    resolution: {integrity: sha512-lwTvuxr0/KY/OCs7BFOh+SLGDs/grdhxgiLZeRMGBx+3usyGAIrHN5gxfdYGEOZdHvEYUJA99ciiWz7g6JFnLw==, tarball: https://registry.npmjs.org/@own-basic-component/vue/-/vue-0.8.86.tgz}
+  '@own-basic-component/vue@0.8.97':
+    resolution: {integrity: sha512-JEQJrEotQE5dZkbV5XpQKX07GVshWa5DBxYNUQfRK3ZsfWH03JBvR1RXzPFQLdbhgzllTnLW5MDessubNS0v0w==, tarball: https://registry.npmjs.org/@own-basic-component/vue/-/vue-0.8.97.tgz}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==, tarball: https://registry.npmjs.org/@pkgjs/parseargs/-/parseargs-0.11.0.tgz}
@@ -2288,6 +2288,9 @@ packages:
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
+
+  crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==, tarball: https://registry.npmjs.org/crypto-js/-/crypto-js-4.2.0.tgz}
 
   css-render@0.13.9:
     resolution: {integrity: sha512-n3C4ZH59rveBrUlAD7n0Ze9/gUMKa4dlH1C9CWKpGcIHR/xRcIVXzBGy1iw8WWq2ySmn2/ZqOpySQNAK5Pb6sw==, tarball: https://registry.npmjs.org/css-render/-/css-render-0.13.9.tgz}
@@ -5460,27 +5463,28 @@ snapshots:
 
   '@one-ini/wasm@0.1.1': {}
 
-  '@own-basic-component/buried@0.8.86':
+  '@own-basic-component/buried@0.8.97':
     dependencies:
       '@types/platform': 1.3.6
       platform: 1.3.6
 
-  '@own-basic-component/config@0.8.86': {}
+  '@own-basic-component/config@0.8.97': {}
 
-  '@own-basic-component/request-axios@0.8.86':
+  '@own-basic-component/request-axios@0.8.97':
     dependencies:
       axios: 1.7.0
     transitivePeerDependencies:
       - debug
 
-  '@own-basic-component/request@0.8.86': {}
+  '@own-basic-component/request@0.8.97': {}
 
-  '@own-basic-component/util@0.8.86':
+  '@own-basic-component/util@0.8.97':
     dependencies:
       clipboard: 2.0.11
+      crypto-js: 4.2.0
       nanoid: 5.0.7
 
-  '@own-basic-component/vue@0.8.86': {}
+  '@own-basic-component/vue@0.8.97': {}
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
@@ -6955,6 +6959,8 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  crypto-js@4.2.0: {}
 
   css-render@0.13.9:
     dependencies:

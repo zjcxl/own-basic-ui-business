@@ -1,4 +1,4 @@
-import type { PictureOptimizeType, PictureWallStatus, UploadPictureWallShowModel } from './types'
+import type { PictureOptimizeType, UploadFileStatusType, UploadPictureWallShowModel } from './types'
 
 /**
  * 处理缩略图地址
@@ -26,7 +26,7 @@ export function handleThumbnailUrl(
  * @param file
  * @param status
  */
-export function createUploadPictureWallItem(file: File, status: PictureWallStatus = 'waiting'): UploadPictureWallShowModel {
+export function createUploadPictureWallItem(file: File, status: UploadFileStatusType = 'waiting'): UploadPictureWallShowModel {
   return {
     url: '',
     dataUrl: window.URL.createObjectURL(file),

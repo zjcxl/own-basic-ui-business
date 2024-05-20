@@ -1,14 +1,41 @@
 /**
  * 状态
  * done - 完成
- * uploading - 上传中
- * error - 错误
  * waiting - 等待中
+ * upload-before-resolving 上传前处理中
+ * uploading - 上传中
  * resolving - 处理中
+ * upload-after-resolving 上传后处理中
+ * copper-waiting 等待裁剪中
  * coppering - 裁剪中
- * waiting-copper 等待裁剪中
+ * error - 错误
  */
-export type PictureWallStatus = 'done' | 'uploading' | 'error' | 'waiting' | 'resolving' | 'coppering' | 'waiting-copper'
+export type UploadFileStatusType = 'done'
+  | 'waiting'
+  | 'upload-before-resolving'
+  | 'uploading'
+  | 'resolving'
+  | 'upload-after-resolving'
+  | 'copper-waiting'
+  | 'coppering'
+  | 'error'
+
+export interface ResultUploadPictureWallShowModel {
+
+  /**
+   * 图片地址
+   */
+  url: string
+  /**
+   * base64图片地址
+   */
+  dataUrl?: string
+  /**
+   * 序号
+   */
+  index: number
+
+}
 
 export interface UploadPictureWallShowModel {
 
@@ -27,11 +54,15 @@ export interface UploadPictureWallShowModel {
   /**
    * 状态
    */
-  status: PictureWallStatus
+  status: UploadFileStatusType
   /**
    * 大小信息
    */
   size?: UploadPictureWallSizeModel
+  /**
+   * 序号
+   */
+  index: number
 
 }
 
