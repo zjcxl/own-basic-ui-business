@@ -1,7 +1,7 @@
 {
   "name": "@own-basic/ui-business-naive",
   "type": "module",
-  "version": "0.0.124",
+  "version": "0.0.125",
   "packageManager": "pnpm@9.2.0",
   "author": "chenxueli",
   "license": "MIT",
