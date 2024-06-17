@@ -64,35 +64,6 @@ const defaultRows = unref(props.defaultRows)
 const customOperationColumn = ref<DataTableColumn<T>>()
 
 /**
- * 自定义的批量操作列
- */
-const customBatchOperationColumn = computed<DataTableColumn<T> | undefined>(() => {
-  if (props.batchOperations.length > 0) {
-    return {
-      type: 'selection',
-      multiple: props.batchOperationsMultiple,
-    }
-  }
-  return undefined
-})
-
-/**
- * 最终的操作列信息
- */
-const resultColumns = computed<DataTableColumn<T>[]>(() => {
-  // 判断有没有选中行的操作
-  if (props.helperType === 'table') {
-    const array = customOperationColumn.value
-      ? [...(props.columns || []), customOperationColumn.value]
-      : (props.columns || [])
-    if (customBatchOperationColumn.value)
-      array.unshift(customBatchOperationColumn.value)
-    return array
-  }
-  return []
-})
-
-/**
  * 表格实例
  */
 const baseTableSearchHelper = ref<InstanceType<typeof BaseTableSearchHelper>>()
@@ -278,6 +249,35 @@ const showBatchOperations = computed<BatchOperationProps<T>[]>(() => {
         return item.permission()
       return item.permission
     })
+})
+
+/**
+ * 自定义的批量操作列
+ */
+const customBatchOperationColumn = computed<DataTableColumn<T> | undefined>(() => {
+  if (showBatchOperations.value.length > 0) {
+    return {
+      type: 'selection',
+      multiple: props.batchOperationsMultiple,
+    }
+  }
+  return undefined
+})
+
+/**
+ * 最终的操作列信息
+ */
+const resultColumns = computed<DataTableColumn<T>[]>(() => {
+  // 判断有没有选中行的操作
+  if (props.helperType === 'table') {
+    const array = customOperationColumn.value
+      ? [...(props.columns || []), customOperationColumn.value]
+      : (props.columns || [])
+    if (customBatchOperationColumn.value)
+      array.unshift(customBatchOperationColumn.value)
+    return array
+  }
+  return []
 })
 
 /**
