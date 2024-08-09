@@ -360,18 +360,21 @@ const helperType = props.helperType
         </NButton>
       </div>
       <div v-else />
-      <NPagination
-        style="flex: 0 0 auto;"
-        :item-count="pageInfo.total"
-        :page="pageInfo.page"
-        :page-size="pageInfo.rows"
-        :page-sizes="pageSizes"
-        show-quick-jumper
-        show-size-picker
-        size="medium"
-        @update:page="handleChangePage"
-        @update:page-size="handleChangePageSize"
-      />
+      <div class="flex items-center gap-4">
+        <span v-if="pageInfo.total > 0">共 {{ pageInfo.total }} 条</span>
+        <NPagination
+          style="flex: 0 0 auto;"
+          :item-count="pageInfo.total"
+          :page="pageInfo.page"
+          :page-size="pageInfo.rows"
+          :page-sizes="pageSizes"
+          show-quick-jumper
+          show-size-picker
+          size="medium"
+          @update:page="handleChangePage"
+          @update:page-size="handleChangePageSize"
+        />
+      </div>
     </div>
     <div v-if="slots.tips">
       <slot name="tips" />

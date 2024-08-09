@@ -2,6 +2,7 @@ import { defineProjectConfig } from '@own-basic-component/config'
 import { axiosRequestMethod } from '@own-basic-component/request-axios'
 import { createSSRApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router/auto'
+import { routes } from 'vue-router/auto-routes'
 import { loadingBarConfig, messageConfig } from '../../packages/naive/src'
 import App from './App.vue'
 import { requestConfig } from './config/request'
@@ -14,6 +15,7 @@ const app = createSSRApp(App)
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  routes,
 })
 
 // 设置请求信息
