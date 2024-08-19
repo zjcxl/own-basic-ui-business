@@ -26,38 +26,6 @@ export const search: DefaultSearchPropsValueType[] = [
     },
   },
   {
-    type: 'tree-select',
-    width: 10,
-    field: 'status333',
-    placeholder: '请选择筛选的状态',
-    extra: {
-      options: [
-        {
-          key: 1,
-          value: 1,
-          label: '成功',
-          children: [
-            {
-              key: 11,
-              value: 11,
-              label: '成功1',
-            },
-            {
-              key: 12,
-              value: 12,
-              label: '成功2',
-            },
-          ],
-        },
-        {
-          key: 2,
-          value: 2,
-          label: '失败',
-        },
-      ],
-    },
-  },
-  {
     type: 'select',
     width: 10,
     field: 'status',
@@ -142,5 +110,33 @@ export const search: DefaultSearchPropsValueType[] = [
     hidden: true,
     field: 'keyword3',
     placeholder: '请输入查询的关键字',
+  },
+  {
+    type: 'tree-select',
+    width: 20,
+    field: 'statusList',
+    placeholder: '请选择筛选状态',
+    defaultValue: [1, 2, 4],
+    extra: {
+      options: [
+        {
+          label: '处理完成',
+          key: -1,
+          children: [
+            { value: 3, key: 3, label: '已关闭' },
+            { value: 5, key: 5, label: '已完成' },
+          ],
+        },
+        {
+          label: '未处理完成',
+          key: 0,
+          children: [
+            { value: 1, key: 1, label: '待解决' },
+            { value: 2, key: 2, label: '已受理' },
+            { value: 4, key: 4, label: '处理中' },
+          ],
+        },
+      ],
+    },
   },
 ]

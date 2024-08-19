@@ -50,6 +50,7 @@ defineExpose({
     cascade
     checkable
     multiple
+    :default-expand-all="props.extra?.defaultExpandAll || false"
     check-strategy="child"
     :disabled="props.disabled"
     :placeholder="props.placeholder"

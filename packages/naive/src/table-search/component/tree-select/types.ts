@@ -11,25 +11,13 @@ export interface TreeSelectAdvancedOption {
   options: TreeSelectOption[]
 
   /**
-   * 是否显示tag
+   * 是否默认展开全部
    */
-  tag?: boolean
-  /**
-   * 是否可过滤
-   */
-  filterable?: boolean
+  defaultExpandAll?: boolean
   /**
    * 是否可清除
    */
   clearable?: boolean
-  /**
-   * 是否允许多选
-   */
-  multiple?: boolean
-  /**
-   * 是否允许动态添加
-   */
-  allowDynamicAdd?: boolean
 }
 
 export type TreeSelectSearchPropsType = RequiredField<
