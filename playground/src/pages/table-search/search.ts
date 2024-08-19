@@ -26,6 +26,38 @@ export const search: DefaultSearchPropsValueType[] = [
     },
   },
   {
+    type: 'tree-select',
+    width: 10,
+    field: 'status333',
+    placeholder: '请选择筛选的状态',
+    extra: {
+      options: [
+        {
+          key: 1,
+          value: 1,
+          label: '成功',
+          children: [
+            {
+              key: 11,
+              value: 11,
+              label: '成功1',
+            },
+            {
+              key: 12,
+              value: 12,
+              label: '成功2',
+            },
+          ],
+        },
+        {
+          key: 2,
+          value: 2,
+          label: '失败',
+        },
+      ],
+    },
+  },
+  {
     type: 'select',
     width: 10,
     field: 'status',

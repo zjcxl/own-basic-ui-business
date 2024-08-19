@@ -6,6 +6,8 @@ import type {
   DateTimeRangePickerSearchPropsType,
   InputSearchPropsType,
   NumberPropsType,
+  RADIO_SEARCH_TYPE,
+  RadioSearchPropsType,
   SEARCH_TYPE_DATE_PICKER,
   SEARCH_TYPE_DATE_RANGE_PICKER,
   SEARCH_TYPE_DATE_TIME_PICKER,
@@ -15,11 +17,12 @@ import type {
   SEARCH_TYPE_SELECT,
   SEARCH_TYPE_SELECT_MULTIPLE,
   SEARCH_TYPE_TEXT_PICKER,
+  SEARCH_TYPE_TREE_SELECT,
   SelectMultiplePropsType,
   SelectSearchPropsType,
   TextSearchPropsType,
+  TreeSelectSearchPropsType,
 } from './component'
-import type { RADIO_SEARCH_TYPE, RadioSearchPropsType } from './component/radio'
 
 /**
  * 类型信息
@@ -33,6 +36,7 @@ export interface SearchPropsType {
   [SEARCH_TYPE_DATE_TIME_RANGE_PICKER]: DateTimeRangePickerSearchPropsType
   [SEARCH_TYPE_SELECT]: SelectSearchPropsType
   [SEARCH_TYPE_SELECT_MULTIPLE]: SelectMultiplePropsType
+  [SEARCH_TYPE_TREE_SELECT]: TreeSelectSearchPropsType
   [SEARCH_TYPE_NUMBER]: NumberPropsType
   [RADIO_SEARCH_TYPE]: RadioSearchPropsType
 }
