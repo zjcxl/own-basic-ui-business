@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
+import { NTreeSelect } from 'naive-ui'
 import { sendAe } from '@own-basic-component/buried'
 import type { QueryObjectType } from '@own-basic-component/config'
 import type { TreeSelectAdvancedOption } from './types'
