@@ -18,6 +18,10 @@ export interface TreeSelectAdvancedOption {
    * 是否可清除
    */
   clearable?: boolean
+  /**
+   * max-tag-count
+   */
+  maxTagCount?: number | 'responsive'
 }
 
 export type TreeSelectSearchPropsType = RequiredField<

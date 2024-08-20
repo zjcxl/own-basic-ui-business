@@ -51,12 +51,13 @@ defineExpose({
     checkable
     multiple
     :default-expand-all="props.extra?.defaultExpandAll || false"
+    :max-tag-count="props.extra?.maxTagCount"
     check-strategy="child"
     :disabled="props.disabled"
     :placeholder="props.placeholder"
     :options="props.extra?.options"
     :default-value="props.defaultValue"
     :clearable="props.extra?.clearable ?? true"
-    @update:value="handleChangeValue"
+    @blur="handleChangeValue"
   />
 </template>

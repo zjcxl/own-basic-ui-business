@@ -118,6 +118,7 @@ export const search: DefaultSearchPropsValueType[] = [
     placeholder: '请选择筛选状态',
     defaultValue: [1, 2, 4],
     extra: {
+      defaultExpandAll: true,
       options: [
         {
           label: '处理完成',
