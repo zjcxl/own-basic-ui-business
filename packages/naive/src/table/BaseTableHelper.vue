@@ -1,8 +1,8 @@
 <script generic="T = RowDataType" lang="ts" setup>
 import { ref } from 'vue'
 import BaseRealTableHelper from './BaseRealTableHelper.vue'
-import type { DataTableProps, RowDataType, TableInstanceType, TableSlotsType } from '.'
-import { defaultDataTableProps, useCustomTableHelper } from '.'
+import type { DataTableProps, RowDataType } from '.'
+import { defaultDataTableProps } from '.'
 
 /**
  * 定义表格组件参数
@@ -12,24 +12,26 @@ const props = withDefaults(defineProps<DataTableProps<T>>(), {
 })
 
 /**
- * 定义插槽信息
- */
-const slots = defineSlots<TableSlotsType<T>>()
-
-/**
  * 基础的baseRealTableHelper
  */
-const baseRealTableHelper = ref<TableInstanceType<T>>()
-
-/**
- * 使用自定义表格帮助
- */
-const { refresh, getDataList } = useCustomTableHelper<T>(baseRealTableHelper)
+const baseRealTableHelper = ref()
 
 /**
  * 暴露方法
  */
-defineExpose({ refresh, getDataList })
+defineExpose(
+  new Proxy(
+    {},
+    {
+      get(_, key) {
+        return baseRealTableHelper.value?.[key]
+      },
+      has(_, key) {
+        return key in baseRealTableHelper.value
+      },
+    },
+  ),
+)
 </script>
 
 <template>
@@ -39,14 +41,8 @@ defineExpose({ refresh, getDataList })
     :columns="columns"
     helper-type="table"
   >
-    <template v-if="slots.search" #search>
-      <slot name="search" />
-    </template>
-    <template v-if="slots.operation" #operation>
-      <slot name="operation" />
-    </template>
-    <template v-if="slots.tips" #tips>
-      <slot name="tips" />
+    <template v-for="(_, slot) in $slots" :key="slot" #[slot]="slotProps">
+      <slot :name="slot" v-bind="slotProps" />
     </template>
   </BaseRealTableHelper>
 </template>
