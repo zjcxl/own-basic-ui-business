@@ -1,5 +1,6 @@
 import type { DataTableProps } from './types'
 
+// eslint-disable-next-line ts/no-unsafe-function-type
 type NativeType = null | number | string | boolean | symbol | Function
 type InferDefault<P, T> = ((props: P) => T & NonNullable<unknown>) | (T extends NativeType ? T : never)
 type InferDefaults<T> = {
