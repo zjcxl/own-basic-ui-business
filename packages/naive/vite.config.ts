@@ -45,7 +45,7 @@ export default defineConfig({
         'vue',
         'naive-ui',
         '@own-basic-component/buried',
-        '@own-basic-component/util',
+        '@own-basic-component/config',
         '@own-basic-component/util',
         '@own-basic-component/vue',
       ],
