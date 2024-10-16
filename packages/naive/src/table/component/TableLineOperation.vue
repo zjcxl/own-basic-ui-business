@@ -1,7 +1,7 @@
 <script generic="T = RowDataType" lang="ts" setup>
-import { computed } from 'vue'
-import { NButton } from 'naive-ui'
 import type { OperationProps, RowDataType } from '../.'
+import { NButton } from 'naive-ui'
+import { computed } from 'vue'
 import MoreDropdown from './MoreDropdown.vue'
 
 interface TableLineOperationPropsState {
@@ -49,6 +49,17 @@ const buttonOperationArray = computed<OperationProps<T>[]>(() =>
 const operationMore = computed<OperationProps<T>[]>(() =>
   realShowArray.value.length > props.maxOperation ? realShowArray.value.slice(props.maxOperation - 1) : [],
 )
+
+/**
+ * 处理点击事件
+ * @param event
+ * @param item
+ * @param record
+ */
+function handleAction(event: Event, item: OperationProps<T>, record: T) {
+  event?.stopPropagation()
+  item.action(record)
+}
 </script>
 
 <template>
@@ -59,7 +70,7 @@ const operationMore = computed<OperationProps<T>[]>(() =>
       :type="item.type || 'primary'"
       tag="a"
       text
-      @click="item.action(props.record)"
+      @click="handleAction($event, item, props.record)"
     >
       {{ item.titleRender?.(props.record) || item.title }}
     </NButton>
