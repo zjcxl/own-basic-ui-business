@@ -1,13 +1,7 @@
 <script generic="T = RowDataType" lang="ts" setup>
 import type { PageResultModel, QueryObjectType, ResultModel } from '@own-basic-component/config'
 import type { DataTableBaseColumn, DataTableColumn } from 'naive-ui'
-import { NButton, NDataTable, NDivider, NPagination } from 'naive-ui'
-import { sendAe } from '@own-basic-component/buried'
-import { computed, h, onMounted, reactive, ref, unref, watch } from 'vue'
 import type { OnUpdateCheckedRowKeys, RowKey } from 'naive-ui/es/data-table/src/interface'
-import { BaseTableSearchHelper, calcPageSizes } from '../table-search'
-import TableLineOperation from './component/TableLineOperation.vue'
-import { defaultDataTableProps, getOperationColumn } from '.'
 import type {
   BatchOperationProps,
   DataTableProps,
@@ -16,6 +10,12 @@ import type {
   TableInstanceType,
   TableSlotsType,
 } from '.'
+import { sendAe } from '@own-basic-component/buried'
+import { NButton, NDataTable, NDivider, NPagination } from 'naive-ui'
+import { computed, h, onMounted, reactive, ref, unref, useTemplateRef, watch } from 'vue'
+import { defaultDataTableProps, getOperationColumn } from '.'
+import { BaseTableSearchHelper, calcPageSizes } from '../table-search'
+import TableLineOperation from './component/TableLineOperation.vue'
 
 /**
  * 定义表格组件参数
@@ -66,7 +66,7 @@ const customOperationColumn = ref<DataTableColumn<T>>()
 /**
  * 表格实例
  */
-const baseTableSearchHelper = ref<InstanceType<typeof BaseTableSearchHelper>>()
+const baseTableSearchHelper = useTemplateRef<InstanceType<typeof BaseTableSearchHelper>>('baseTableSearchHelper')
 
 /**
  * 定义分页的参数信息
@@ -335,7 +335,7 @@ const helperType = props.helperType
         @update:checked-row-keys="handleSelectRowsMethod"
       />
     </div>
-    <div v-else-if="'list'">
+    <div v-else-if="helperType === 'list'">
       <template v-if="slots['data-list']">
         <slot :list="dataList as T[]" name="data-list" />
       </template>

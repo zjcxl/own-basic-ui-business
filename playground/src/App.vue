@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { NConfigProvider, dateZhCN, zhCN } from 'naive-ui'
 import hljs from 'highlight.js/lib/core'
 import json from 'highlight.js/lib/languages/json'
+import { dateZhCN, NConfigProvider, zhCN } from 'naive-ui'
 
 hljs.registerLanguage('json', json)
 </script>

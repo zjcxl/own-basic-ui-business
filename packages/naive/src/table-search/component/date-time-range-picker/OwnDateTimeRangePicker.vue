@@ -1,10 +1,10 @@
 <script lang="ts" setup>
+import type { QueryObjectType } from '@own-basic-component/config'
+import type { DateTimeRangeFieldFormatType, DateTimeRangePicker, DateTimeRangeShortcutsType, DateTimeRangeValueFormatType } from './types'
+import { sendAe } from '@own-basic-component/buried'
 import { format } from 'date-fns'
 import { NDatePicker } from 'naive-ui'
 import { computed, onMounted, ref } from 'vue'
-import { sendAe } from '@own-basic-component/buried'
-import type { QueryObjectType } from '@own-basic-component/config'
-import type { DateTimeRangeFieldFormatType, DateTimeRangePicker, DateTimeRangeShortcutsType, DateTimeRangeValueFormatType } from './types'
 
 const props = withDefaults(defineProps<{
   defaultValue?: [number, number]

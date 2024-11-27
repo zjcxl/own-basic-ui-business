@@ -1,8 +1,8 @@
 <script lang="ts" setup>
+import type { QueryObjectType } from '@own-basic-component/config'
+import { sendAe } from '@own-basic-component/buried'
 import { NInput } from 'naive-ui'
 import { onMounted, ref } from 'vue'
-import { sendAe } from '@own-basic-component/buried'
-import type { QueryObjectType } from '@own-basic-component/config'
 
 const props = withDefaults(defineProps<{
   defaultValue?: string

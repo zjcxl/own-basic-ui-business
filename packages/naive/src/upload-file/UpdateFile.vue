@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { BaseFileSelectButton } from '@own-basic-component/vue'
-import { useMessage } from '@own-basic-component/util'
-import { NButton } from 'naive-ui'
 import type { UploadFileInfo, UploadFileStatus } from './types'
+import { useMessage } from '@own-basic-component/util'
+import { BaseFileSelectButton } from '@own-basic-component/vue'
+import { NButton } from 'naive-ui'
+import { computed, onMounted, ref } from 'vue'
 import { createUploadFileInfoItem } from './utils'
 
 const props = withDefaults(defineProps<{

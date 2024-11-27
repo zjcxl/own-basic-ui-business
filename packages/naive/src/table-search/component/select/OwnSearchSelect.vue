@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { NSelect } from 'naive-ui'
-import { computed, onMounted, ref } from 'vue'
-import { sendAe } from '@own-basic-component/buried'
 import type { QueryObjectType } from '@own-basic-component/config'
 import type { SelectAdvancedOption } from './types'
+import { sendAe } from '@own-basic-component/buried'
+import { NSelect } from 'naive-ui'
+import { computed, onMounted, ref } from 'vue'
 
 const props = withDefaults(defineProps<{
   defaultValue?: string | number

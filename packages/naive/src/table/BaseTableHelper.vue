@@ -1,8 +1,8 @@
 <script generic="T = RowDataType" lang="ts" setup>
-import { ref } from 'vue'
-import BaseRealTableHelper from './BaseRealTableHelper.vue'
 import type { DataTableProps, RowDataType, TableInstanceType, TableSlotsType } from '.'
+import { useTemplateRef } from 'vue'
 import { defaultDataTableProps, useCustomTableHelper } from '.'
+import BaseRealTableHelper from './BaseRealTableHelper.vue'
 
 /**
  * 定义表格组件参数
@@ -19,7 +19,7 @@ const slots = defineSlots<TableSlotsType<T>>()
 /**
  * 基础的baseRealTableHelper
  */
-const baseRealTableHelper = ref<TableInstanceType<T>>()
+const baseRealTableHelper = useTemplateRef<TableInstanceType<T>>('baseRealTableHelper')
 
 /**
  * 使用自定义表格帮助

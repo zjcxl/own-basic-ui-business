@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import type { QueryObjectType } from '@own-basic-component/config'
+import type { CustomSearchItem, DefaultSearchPropsValueType, SearchExtra } from '.'
 import { RefreshOutline, SearchOutline } from '@vicons/ionicons5'
 import { NButton, NDivider, NSpace } from 'naive-ui'
 import { computed, nextTick, ref } from 'vue'
-import type { CustomSearchItem, DefaultSearchPropsValueType, SearchExtra } from '.'
 import { calcSearchItems } from '.'
 
 const props = withDefaults(defineProps<{

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useMessage } from '@own-basic-component/util'
 import type { PictureOptimizeType } from '../../../../packages/naive/src'
+import { useMessage } from '@own-basic-component/util'
 import { PictureWall, UploadPictureWall } from '../../../../packages/naive/src'
 
 const imageUrlList = ref<string[]>([

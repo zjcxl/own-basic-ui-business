@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { NInputNumber } from 'naive-ui'
-import { onMounted, ref } from 'vue'
-import { sendAe } from '@own-basic-component/buried'
 import type { QueryObjectType } from '@own-basic-component/config'
 import type { NumberAdvancedExtra } from './types'
+import { sendAe } from '@own-basic-component/buried'
+import { NInputNumber } from 'naive-ui'
+import { onMounted, ref } from 'vue'
 
 const props = withDefaults(defineProps<{
   defaultValue?: number

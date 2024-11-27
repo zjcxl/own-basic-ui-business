@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { NImage, NImageGroup } from 'naive-ui'
 import type { PictureOptimizeType, PictureWallShowModel } from './types'
+import { NImage, NImageGroup } from 'naive-ui'
+import { computed } from 'vue'
 import { handleThumbnailUrl } from './utils'
 
 const props = withDefaults(defineProps<{

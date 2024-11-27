@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
-import { NTreeSelect } from 'naive-ui'
-import { sendAe } from '@own-basic-component/buried'
 import type { QueryObjectType } from '@own-basic-component/config'
 import type { TreeSelectAdvancedOption } from './types'
+import { sendAe } from '@own-basic-component/buried'
+import { NTreeSelect } from 'naive-ui'
+import { onMounted, ref } from 'vue'
 
 const props = withDefaults(defineProps<{
   defaultValue?: Array<string | number>
