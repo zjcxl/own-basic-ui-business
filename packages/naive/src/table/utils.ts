@@ -1,6 +1,6 @@
 import type { DataTableColumn } from 'naive-ui'
 
-import type { ShallowRef } from 'vue'
+import type { Ref, ShallowRef } from 'vue'
 import type { OperationExtra, OperationProps, TableInstanceType } from '.'
 
 const FIELD_OPERATION = 'operation'
@@ -19,7 +19,7 @@ const MORE_BUTTON_LENGTH = RIGHT_BLANK_LENGTH + CHAR_LENGTH * 3
  * @param tableHelper
  */
 export function useCustomTableHelper<T>(
-  tableHelper?: Readonly<ShallowRef<TableInstanceType<T> | null>>,
+  tableHelper?: Ref<TableInstanceType<T> | undefined> | Readonly<ShallowRef<TableInstanceType<T> | null>>,
 ) {
   /**
    * 刷新的方法

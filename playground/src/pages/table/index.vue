@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { PageResultModel, QueryObjectType, ResultModel } from '@own-basic-component/config'
 import type { DataTableColumns, DataTableRowKey } from 'naive-ui'
-import type { BatchOperationProps, OperationProps } from '../../../../packages/naive/src'
+import type { BatchOperationProps, OperationProps, TableInstanceType } from '../../../../packages/naive/src'
 import { format } from 'date-fns'
 import { onMounted } from 'vue'
 import { BaseTableHelper } from '../../../../packages/naive/src'
@@ -11,6 +11,12 @@ interface DataType {
   no: string
   title: string
 }
+
+const baseTableHelper = useTemplateRef<TableInstanceType<{
+  id: number
+  no: string
+  title: string
+}>>('baseTableHelper')
 
 const columns: DataTableColumns<DataType> = [
   {
@@ -96,6 +102,7 @@ onMounted(() => {
 
 <template>
   <BaseTableHelper
+    ref="baseTableHelper"
     :is-show-divider-data="false"
     :is-show-search="false"
     :columns="columns"

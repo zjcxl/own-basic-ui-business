@@ -12,7 +12,7 @@ import type {
 } from '.'
 import { sendAe } from '@own-basic-component/buried'
 import { NButton, NDataTable, NDivider, NPagination } from 'naive-ui'
-import { computed, h, onMounted, reactive, ref, unref, useTemplateRef, watch } from 'vue'
+import { computed, h, onMounted, reactive, ref, unref, watch } from 'vue'
 import { defaultDataTableProps, getOperationColumn } from '.'
 import { BaseTableSearchHelper, calcPageSizes } from '../table-search'
 import TableLineOperation from './component/TableLineOperation.vue'
@@ -66,7 +66,7 @@ const customOperationColumn = ref<DataTableColumn<T>>()
 /**
  * 表格实例
  */
-const baseTableSearchHelper = useTemplateRef<InstanceType<typeof BaseTableSearchHelper>>('baseTableSearchHelper')
+const baseTableSearchHelper = ref<InstanceType<typeof BaseTableSearchHelper>>()
 
 /**
  * 定义分页的参数信息
@@ -311,7 +311,9 @@ const helperType = props.helperType
   <div>
     <BaseTableSearchHelper
       v-if="props.isShowSearch"
-      ref="baseTableSearchHelper" :search="search" :extra="searchExtra"
+      ref="baseTableSearchHelper"
+      :search="search"
+      :extra="searchExtra"
       @search-action="params => fetchData(params, 1)"
     >
       <template v-if="slots.search" #search>
