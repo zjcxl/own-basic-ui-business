@@ -1,5 +1,6 @@
 <script generic="T = RowDataType" lang="ts" setup>
 import type { DataTableProps, RowDataType, TableInstanceType, TableSlotsType } from '.'
+import { ref } from 'vue'
 import { defaultDataTableProps, useCustomTableHelper } from '.'
 import BaseRealTableHelper from './BaseRealTableHelper.vue'
 
