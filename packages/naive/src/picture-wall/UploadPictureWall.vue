@@ -3,7 +3,7 @@ import type { PictureOptimizeType, UploadPictureWallShowModel } from './types'
 import { useMessage } from '@own-basic-component/util'
 import { BaseFileSelectButton } from '@own-basic-component/vue'
 import { NCard, NImage, NImageGroup, NModal, NProgress } from 'naive-ui'
-import { computed, defineAsyncComponent, onMounted, reactive, ref, useTemplateRef } from 'vue'
+import { computed, defineAsyncComponent, onMounted, reactive, ref } from 'vue'
 import { createUploadPictureWallItem, handleThumbnailUrl } from './utils'
 
 const props = withDefaults(defineProps<{
@@ -145,7 +145,7 @@ const CustomCropper = defineAsyncComponent(() => import('./CustomCropper.vue'))
 /**
  * 文件选择器
  */
-const fileRef = useTemplateRef<HTMLInputElement>('fileRef')
+const fileRef = ref<HTMLInputElement>()
 
 /**
  * 大小样式

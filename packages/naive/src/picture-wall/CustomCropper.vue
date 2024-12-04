@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { NANOID } from '@own-basic-component/util'
 import { NButton, NDivider } from 'naive-ui'
-import { ref, useTemplateRef } from 'vue'
+import { ref } from 'vue'
 import { VueCropper } from 'vue-cropper'
 import 'vue-cropper/dist/index.css'
 
@@ -31,7 +31,7 @@ const emits = defineEmits<{
 /**
  * 文件选择器
  */
-const avatarCropperRef = useTemplateRef<InstanceType<typeof VueCropper>>('avatarCropperRef')
+const avatarCropperRef = ref<InstanceType<typeof VueCropper>>()
 
 /**
  * 点击保存事件
