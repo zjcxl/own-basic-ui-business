@@ -2,7 +2,7 @@
   "name": "@own-team/base-ui-business",
   "private": true,
   "packageManager": "pnpm@9.14.2",
-  "version": "0.0.497",
+  "version": "0.0.498",
   "scripts": {
     "build": "pnpm -r run build",
     "build:stub": "pnpm -r run build:stub",
